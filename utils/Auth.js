@@ -1,16 +1,20 @@
+const mongoose = require('mongoose')
 const User = require('../models/user')
 const bcrypt = require('bcrypt');
 const {SECRET} = require('../config');
 const jwt = require('jsonwebtoken');
+const path = require('path')
 
-const userRegistered = async(userDets,role,res) =>
+const userRegistered = async(userDets,Image,role,res) =>
 {
+   
     //Validate the username
     try{
         let userNameNotTaken = await validateUserName(userDets.username) ;
+        
         if(!userNameNotTaken){
             res.status('400').json({
-                message: "User already taken",
+                message: "Username already taken",
                 success:false
             });
         }
@@ -18,26 +22,30 @@ const userRegistered = async(userDets,role,res) =>
         let emailNotRegistered = await validateEmail(userDets.email);
         if(!emailNotRegistered){
             res.status('400').json({
-                message: "User already taken"
+                message: "Email already taken"
                 ,success:false
             });
         }
         //Get the hashed password
         const password = await bcrypt.hash(userDets.password,12);
+        console.log(password);
         // Create new User    
         const newUser = new User({
             ... userDets,
             password ,
-            role
+            role,
+            Image
         });
-        await newUser.save();
+        
         console.log(newUser);  
+          newUser.save();
         return res.status(200).json({
             message:"User has been registered successfully,Please Login!",
             success:true
         });
     }catch(err){
         //Implement the blogger
+        console.log(err);
         return res.status(500).json({
             message:"Unable to register your account!"
             ,success:false

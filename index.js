@@ -4,6 +4,8 @@ const cors = require('cors')
 const {connect} = require('mongoose')
 const {success,error} = require('consola')
 
+const path=require('path')
+
 //Bring in the App constants
 const {DB,PORT} = require('./config')
 //Initialize the Application
@@ -11,6 +13,8 @@ const app = exp()
 //use middlewares
 app.use(cors())
 app.use(bp.json())
+// middleware for uploading image
+app.use('uploads/',exp.static(path.join(__dirname+'./uploads')))
 //use router middleware
 app.use('/api/users',require('./routes/users'))
 

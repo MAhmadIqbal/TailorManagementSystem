@@ -4,9 +4,10 @@ const userSchema = new Schema(
     name:{type:String, required:true},
     email:{type:String, required:true},
     role:{type:String,
-        default:'user',
+        default:'client',
         enum:['client','tailor','admin']
     },
+    Image:{type:String},
     username:{type:String,required:true},
     password:{type:String,required:true}
 },{timestamps:true
