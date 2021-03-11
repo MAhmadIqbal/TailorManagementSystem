@@ -8,6 +8,7 @@ exports.orders_getall = (req,res,next) => {
     .populate('product')
     .exec()
     .then(docs=> {
+        console.log(res.status(200))
         res.status(200).json({
             count : docs.length,
             orders : docs.map(doc =>{

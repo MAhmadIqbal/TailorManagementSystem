@@ -3,14 +3,14 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const path = require('path');
-const env = require('dotenv')
+const expresFormData = require('express-form-data')
 
 const bodyParser = require('body-parser');
 
 const productsRoutes = require('./routes/products')
 const ordersRoutes = require('./routes/orders');
 const userRoutes = require('./routes/user');
-
+const usersRoutes = require('./routes/users')
 
 
 //MongoDB configuration of CRUD
@@ -28,10 +28,10 @@ mongoose.Promise =global.Promise;
                     // {  useNewUrlParser: true }
                     // )
 //connecting the database REST_api 
-var DataBase = process.env.D
+var DataBase = process.env.DB
 console.log("the env db key is: ",DataBase);
 mongoose.connect('mongodb://localhost:27017/node',{
-    useNewUrlParser : true
+    useNewUrlParser : true, useUnifiedTopology: true 
 }).then(()=>{
     console.log("Db connected successfully");
 }).catch(err=>{
@@ -60,6 +60,7 @@ app.use(bodyParser.json());
 //  parse requests of content-type-application
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
+app.use(expresFormData.parse(this.options));
 
 // headers handling cors error.
 
@@ -78,7 +79,7 @@ app.use((req,res,next) =>{
 app.use('/products' , productsRoutes);
 app.use('/orders' , ordersRoutes);
 app.use('/user', userRoutes);
-
+app.use('/users',usersRoutes);
 // Handling Error
 app.use((req,res,next) => {
     const error = new Error('Not Found');
