@@ -7,6 +7,9 @@
     const userController= require('../controllers/user');
     const checkAuth = require('../middlewares/checkAuth');
     
+    router.post('/signup/test', (req)=>{
+        console.log(req.body);
+    });
     router.post('/signup', userController.usersSignUp);
     router.post("/login", userController.usersLogin);
         

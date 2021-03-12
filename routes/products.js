@@ -8,7 +8,7 @@
     const productsController = require('../controllers/products');
     const storage = multer.diskStorage({
         destination: function(req,file,cb){
-            cb(null, 'uploads')
+            cb(null, path.join(__dirname, '/uploads/'));
         },
         filename : function(req,file,cb){
             cb(null, Date.now() + path.extname(file.originalname));
@@ -23,7 +23,7 @@
         
     };
 
-    const upload = multer({storage : storage, limits: {
+    const upload = multer({storage : storage,filefilter:fileFilter, limits: {
         fileSize : 1024 * 1024 * 5 
     }});
 
@@ -35,8 +35,6 @@
     //     })
     // });
     router.get('/',productsController.products_get);
-
-
     router.post('/', checkAuth, upload.single('productImage'),productsController.products_post);
     router.get('/:productId',);
     router.patch('/:productId',checkAuth, productsController.products_update);

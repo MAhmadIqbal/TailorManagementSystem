@@ -44,7 +44,7 @@ exports.products_get = (req,res,next) => {
     //     })
     }
 exports.products_post = (req,res,next) => {
-       
+       Product.find()
     const product = new Product({
         _id : new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -63,8 +63,8 @@ exports.products_post = (req,res,next) => {
                     price : result.price
                     _id : result._id
                     request:{
-                        type : 'POST'
-                        url : 'http://localhost:3000/products/' + doc._id
+                        type : 'GET'
+                        url : 'http://localhost:3000/products/' + result._id
                     }
                 } 
             }

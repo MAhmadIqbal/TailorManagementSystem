@@ -1,11 +1,11 @@
 
 const mongoose = require('mongoose');
-const User = require('../models/user');
+const UserRest = require('../models/usersRest');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 exports.usersSignUp = (req,res,next)=>{
-    User.find({email:req.body.email})
+    UserRest.find({email:req.body.email})
     .exec()
     .then(user=> 
     {
@@ -23,7 +23,7 @@ exports.usersSignUp = (req,res,next)=>{
                 }
                 else
                 {
-                    const user = new User({
+                    const user = new UserRest({
                         _id : new mongoose.Types.ObjectId(),
                         email : req.body.email,
                         password : hash
@@ -54,7 +54,7 @@ exports.usersSignUp = (req,res,next)=>{
     exports.usersLogin = (req,res,next)=>
     {
         console.log(req.body.email)
-        User.find({email: req.body.email})
+        UserRest.find({email: req.body.email})
         .exec()
         .then(user=>
         {
@@ -101,7 +101,7 @@ exports.usersSignUp = (req,res,next)=>{
     }
     exports.userDelete = (req,res,next)=>
     {
-        User.remove({_id : req.params.userId})
+        UserRest.remove({_id : req.params.userId})
         .exec()
         .then(result=>{
             res.status(200).json({
@@ -116,6 +116,6 @@ exports.usersSignUp = (req,res,next)=>{
         });
     }
 exports.userAll = (req,res,next)=>{
-    User.find()
+    UserRest.find()
 
 } 

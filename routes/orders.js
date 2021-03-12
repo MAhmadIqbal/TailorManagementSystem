@@ -9,7 +9,7 @@ const orderController= require('../controllers/orders')
 
 router.get('/',orderController.orders_getall);
 router.post('/',checkAuth,orderController.orders_post);
-router.get('/:orderId',checkAuth,orderController.orders_getId);
+router.get('/:orderId',orderController.orders_getId);
 router.delete('/:orderid' ,orderController.order_delete);
 
 module.exports = router;

@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const path = require('path');
-const expresFormData = require('express-form-data')
 
 const bodyParser = require('body-parser');
 
@@ -28,9 +27,8 @@ mongoose.Promise =global.Promise;
                     // {  useNewUrlParser: true }
                     // )
 //connecting the database REST_api 
-var DataBase = process.env.DB
-console.log("the env db key is: ",DataBase);
-mongoose.connect('mongodb://localhost:27017/node',{
+const url ='mongodb+srv://node-rest:node-rest@node-rest-shop.b6c66.mongodb.net/node-rest?retryWrites=true&w=majority'
+mongoose.connect(url,{
     useNewUrlParser : true, useUnifiedTopology: true 
 }).then(()=>{
     console.log("Db connected successfully");
@@ -58,9 +56,8 @@ app.use('./uploads', express.static(path.join(__dirname, './uploads')));
 app.use(bodyParser.json());
 
 //  parse requests of content-type-application
-app.use(express.urlencoded({extended:false}));
 app.use(express.json());
-app.use(expresFormData.parse(this.options));
+app.use(express.urlencoded({extended:false}));
 
 // headers handling cors error.
 

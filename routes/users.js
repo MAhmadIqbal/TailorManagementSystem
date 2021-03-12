@@ -24,12 +24,8 @@ const fileFilter = (req,file,cb)=>{
  var uploads = multer({storage:storage,filefilter:fileFilter})
 
 //registration user route
-router.post('/register-user-test',async(req,res)=>{
-   console.log(req.body);
-    // await userRegistered(req.body,req.file.path,"client",res);
-});
-router.post('/register-user',async(req,res)=>{
-    await userRegistered(req.body,req.file.path,"client",res);
+router.post('/register-user',async (req,res)=>{
+    await userRegistered(req.body,"client",res);
 });
 //registration admin route
 router.post('/register-tailor',uploads.single('Image'),async(req,res)=>{

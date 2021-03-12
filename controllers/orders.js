@@ -101,7 +101,7 @@ exports.orders_post = (req,res,next) => {
                 console.log(result);
                 res.status(201).json({
                     message : "Order Stored",
-                    creatededOrder :{
+                    createdOrder :{
                         _id : result._id,
                         product : result.product,
                         quantity : result.quantity,
