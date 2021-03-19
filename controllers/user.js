@@ -1,7 +1,24 @@
+const JWT = require("jsonwebtoken");
+const User = require("../models/user");
+const Token = require("../models/token");
+const sendEmail = require("../utils/email/sendEmail");
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
+
+const JWTSecret = process.env.JWT_SECRET;
+const bcryptSalt = process.env.BCRYPT_SALT;
+const clientURL = process.env.CLIENT_URL;
+const {resetPasswordService, requestPasswordResetService } = require('../utils/Auth')
+// 
+// const {
+//     signup,
+//     requestPasswordReset,
+//     resetPassword,
+//   } = require("../services/auth.service");
 
 const mongoose = require('mongoose');
 const UserRest = require('../models/usersRest');
-const bcrypt = require('bcrypt');
+
 const jwt = require('jsonwebtoken');
 
 exports.usersSignUp = (req,res,next)=>{
@@ -117,5 +134,57 @@ exports.usersSignUp = (req,res,next)=>{
     }
 exports.userAll = (req,res,next)=>{
     UserRest.find()
+    .exec()
+        .then(result=>{
+            res.status(200).json({
+                message : 'Users',
+                result  : result
+            });
+        })
+}
+exports.resetPasswordRequest =  (req, res, next) => {
+    const requestPasswordResetService = requestPasswordReset(
+      req.body.email
+    );
+    return res.json(requestPasswordResetService);
+  };
+  
+  exports.resetPassword = (req, res, next) => {
+    const resetPasswordService = resetPassword(
+      req.body.userId,
+      req.body.token,
+      req.body.password
+    );
+    return res.json(resetPasswordService);
+  };
+  
+    //--------------
+    
+  
+    //------------------------
+  
+  
+  const signUpController = async (req, res, next) => {
+    const signupService = await signup(req.body);
+    return res.json(signupService);
+  };
+  //------------------------------------
 
-} 
+const signup = async (data) => {
+  let user = await User.findOne({ email: data.email });
+  if (user) {
+    throw new Error("Email already exist", 422);
+  }
+  user = new User(data);
+  const token = JWT.sign({ id: user._id }, JWTSecret);
+  await user.save();
+
+  return (data = {
+    userId: user._id,
+    email: user.email,
+    name: user.name,
+    token: token,
+  });
+};
+  
+  

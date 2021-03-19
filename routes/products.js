@@ -26,7 +26,9 @@
     const upload = multer({storage : storage,filefilter:fileFilter, limits: {
         fileSize : 1024 * 1024 * 5 
     }});
-
+    
+    router.patch('/:productId',checkAuth, productsController.products_update);
+    
     
 
     // router.get('/about',(req,res,next) => {

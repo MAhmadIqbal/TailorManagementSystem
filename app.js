@@ -5,11 +5,17 @@ const morgan = require('morgan');
 const path = require('path');
 
 const bodyParser = require('body-parser');
+const expressValidator = require('express-validator')
+const expressSession = require('express-session')
+
+const engines = require("consolidate");
+const paypal = require("paypal-rest-sdk");
 
 const productsRoutes = require('./routes/products')
 const ordersRoutes = require('./routes/orders');
 const userRoutes = require('./routes/user');
 const usersRoutes = require('./routes/users')
+const paymentRoutes = require('./routes/payment')
 
 
 //MongoDB configuration of CRUD
@@ -29,7 +35,11 @@ mongoose.Promise =global.Promise;
 //connecting the database REST_api 
 const url ='mongodb+srv://node-rest:node-rest@node-rest-shop.b6c66.mongodb.net/node-rest?retryWrites=true&w=majority'
 mongoose.connect(url,{
-    useNewUrlParser : true, useUnifiedTopology: true 
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+    autoIndex: true, 
 }).then(()=>{
     console.log("Db connected successfully");
 }).catch(err=>{
@@ -58,7 +68,22 @@ app.use(bodyParser.json());
 //  parse requests of content-type-application
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+// validation uses there
+app.use(expressValidator())
+// session
 
+//EJS engine set
+app.engine("ejs", engines.ejs);
+app.set("views", "./views");
+app.set("view engine", "ejs");
+
+paypal.configure({
+    mode: "sandbox", //sandbox or live
+    client_id:
+        "AarUi7DfcZaVwTyuHOE2qMPGP1Gy65T8KNHicseSgSXB-gm_2upRM74fU-MKmslNaHKqNOUsxMrNv9I-",
+    client_secret:
+        "EI0ea3hVzYFwuts33i0RUVhxF48woSUSg7lwNbkImLrHpcEYpUmJPRXdf4CXn4kFacsRoZ-62cn9Xe6h"
+});
 // headers handling cors error.
 
 app.use((req,res,next) =>{
@@ -77,6 +102,7 @@ app.use('/products' , productsRoutes);
 app.use('/orders' , ordersRoutes);
 app.use('/user', userRoutes);
 app.use('/users',usersRoutes);
+app.use('/payment',paymentRoutes)
 // Handling Error
 app.use((req,res,next) => {
     const error = new Error('Not Found');
