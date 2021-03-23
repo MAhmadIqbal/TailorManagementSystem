@@ -15,9 +15,7 @@
         
     router.delete('/:userId',checkAuth, userController.userDelete);
     router.get('/',userController.userAll);
-    router.post('/request-reset-password',(req,res)=>{
-        userController.requestResetPassword
-    });
+    router.post('/request-reset-password',userController.resetPasswordRequest);
     router.post('/reset-password',userController.resetPassword);
 
     module.exports = router;

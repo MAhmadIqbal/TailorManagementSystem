@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const userSchema = mongoose.Schema({
     _id : mongoose.Schema.Types.ObjectId,
     
-    name:{
+    fullname:{
         type:String,
         trim:true,
         required:true   
@@ -19,18 +19,11 @@ const userSchema = mongoose.Schema({
             unique:true,
             required:true
             },
-    password : {type: String, required : true},
+    password : {type: String, required : true,minlength:8},
     role: {type:String,
             default:'customer',
             enum:['customer','tailor','admin']
         },
 },{timestamps:true});
-userSchema.pre("save",async (next)=>{
-    if(!this.isModified("password")){
-        return next()
-    }
-    const hash = await bcrypt.hash(this.password,Number(12));
-    this.password = hash
-    next();
-})
+
 module.exports = mongoose.model('User' , userSchema);

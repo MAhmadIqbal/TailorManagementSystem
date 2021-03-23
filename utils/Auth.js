@@ -4,7 +4,13 @@ const bcrypt = require('bcrypt');
 const {SECRET} = require('../config/app');
 const jwt = require('jsonwebtoken');
 const path = require('path')
+const crypto = require('crypto')
 
+const Token=require('../models/token')
+//set env variables
+const bcryptSalt = process.env.BCRYPT_SALT
+const clientURL = process.env.CLIENT_URL
+//here Functions start
 const userRegistered = async(userDets,Image,role,res) =>
 {
    
@@ -127,7 +133,7 @@ let user= await User.findOne({email})
   
     let resetToken = crypto.randomBytes(32).toString("hex");
     const hash = await bcrypt.hash(resetToken, Number(bcryptSalt));
-  
+    
     await new Token({
       userId: user._id,
       token: hash,

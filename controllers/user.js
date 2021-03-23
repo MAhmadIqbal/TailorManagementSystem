@@ -42,8 +42,12 @@ exports.usersSignUp = (req,res,next)=>{
                 {
                     const user = new UserRest({
                         _id : new mongoose.Types.ObjectId(),
+                        fullname:req.body.fullname,
                         email : req.body.email,
-                        password : hash
+                        username:req.body.username,
+                        password : hash,
+                        role:req.body.role
+
                     });
                     user.save().then(result=>{
                         console.log(result);
@@ -143,14 +147,14 @@ exports.userAll = (req,res,next)=>{
         })
 }
 exports.resetPasswordRequest =  (req, res, next) => {
-    const requestPasswordResetService = requestPasswordReset(
+    const requestPasswordReset = requestPasswordResetService(
       req.body.email
     );
-    return res.json(requestPasswordResetService);
+    return res.json(requestPasswordReset);
   };
   
   exports.resetPassword = (req, res, next) => {
-    const resetPasswordService = resetPassword(
+    const resetPasswordService = resetPasswordService(
       req.body.userId,
       req.body.token,
       req.body.password
