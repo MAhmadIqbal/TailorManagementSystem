@@ -163,7 +163,7 @@ let user= await User.findOne({email})
   
     const isValid = await bcrypt.compare(token, passwordResetToken.token);
   
-    if (!isValid) {
+    if (!isValid) { 
       throw new Error("Invalid or expired password reset token");
     }
   

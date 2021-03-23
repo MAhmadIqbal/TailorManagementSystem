@@ -23,14 +23,7 @@ const userSchema = new Schema(
         required:true
     },
     password:{type:String,required:true}
-},{timestamps:true
-});
-userSchema.pre("save",async (next)=>{
-    if(!this.isModified("password")){
-        return next()
-    }
-    const hash = await bcrypt.hash(this.password,Number(12));
-    this.password = hash
-    next();
-})
+},{timestamps:true}
+);
+
 module.exports= model('Users',userSchema);
