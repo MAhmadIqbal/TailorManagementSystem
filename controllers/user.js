@@ -161,7 +161,9 @@ exports.resetPasswordRequest =  (req, res, next) => {
     );
     return res.json(resetPasswordService);
   };
-  
+  exports.logout= (req,res,next)=>{
+      user
+  }
     //--------------
     
   

@@ -34,26 +34,28 @@ mongoose.Promise =global.Promise;
                     // )
 //connecting the database REST_api 
 const url ='mongodb+srv://node-rest:node-rest@node-rest-shop.b6c66.mongodb.net/node-rest?retryWrites=true&w=majority'
-mongoose.connect(url,{
+const DB = url ||'mongodb://localhost:27017/TMS'
+console.log(DB)
+mongoose.connect(DB,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
     useCreateIndex: true,
     autoIndex: true, 
 }).then(()=>{
-    console.log("Db connected successfully");
+    console.log(`Db connected successfully`);
 }).catch(err=>{
         console.log("db not connected due to some error",err);
         process.exit();
 })
 // connecting the database CRUD
 // mongoose.connect(dbConfigCRUD.url,{
-//     useNewUrlParser : true
+// useNewUrlParser : true
 // }).then(()=>{
-//     console.log('Successfully connected to the database');
+// console.log('Successfully connected to the database');
 // }).catch(err=>{
-//     console.log('Could not connect to the database ...',err);
-//     process.exit();
+// console.log('Could not connect to the database ...',err);
+// process.exit();
 // })
 
 
