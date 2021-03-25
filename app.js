@@ -34,9 +34,9 @@ mongoose.Promise =global.Promise;
                     // )
 //connecting the database REST_api 
 const url ='mongodb+srv://node-rest:node-rest@node-rest-shop.b6c66.mongodb.net/node-rest?retryWrites=true&w=majority'
-const DB = url ||'mongodb://localhost:27017/TMS'
-console.log(DB)
-mongoose.connect(DB,{
+// const DB = url ||'mongodb://localhost:27017/TMS'
+// console.log(DB)
+mongoose.connect(url,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
