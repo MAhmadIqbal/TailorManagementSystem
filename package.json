@@ -10,7 +10,7 @@
   "engines": {
     "node": "12.11.1"
   },
-  "repository": {
+  "repository": { 
     "type": "git",
     "url": "git+https://github.com/Ahmadpu/TailorManagementSystem.git"
   },
