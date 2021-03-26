@@ -86,25 +86,36 @@ exports.usersSignUp = (req,res,next)=>{
                     message: "Auth Failed"
                 });
             }
-            console.log("user[0].password",user[0].password)
-            console.log("req.body.password",req.body.password)
             bcrypt.compare(req.body.password,user[0].password,(err,result)=>{
                 if(err){
                     return res.status(401).json({
                         message : "Auth Failed"
                     });
                 }   if(result){
-                    const token = jwt.sign({
+                    const tokengen = jwt.sign({
                         email : user[0].email,
                         userId : user[0]._id
                         },
                         process.env.JWT_KEY,
                         {expiresIn : "1h"},
                         );
-                    
+                    const tokentoSave = new Token({
+                        userId : user[0]._id,
+                        token:tokengen
+                    })
+                    tokentoSave.save().then(result=>{
+                        res.json({message:"token saved"})
+                        console.log("token saved")
+                    }).catch(err=>{
+                        console.log(err);
+                        res.status(500).json({
+                            message : "Catch portion",
+                            error : err
+                        });
+                    });
                     return res.status(200).json({
                         message : "Auth successful",
-                        token : token
+                        token : tokengen
                     });
                 }
                 res.status(401).json({
@@ -192,5 +203,20 @@ const signup = async (data) => {
     token: token,
   });
 };
-  
-  
+exports.logout = (req,res,next)=>{
+    const token1 = req.headers.authorization.split(" ")[1];
+    Token.remove({token:token1}).exec()
+    .then(result=>{
+        console.log('user logout')
+        res.status(200).json({
+            message:"User has been logout",
+            result:result
+        })
+    }).catch(err=>{
+        console.log(err)
+        res.status(500).json({
+            message:'Internal server error',
+            error:err
+        })
+    })
+}
