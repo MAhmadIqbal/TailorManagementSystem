@@ -22,7 +22,11 @@ const userSchema = new Schema(
         unique:true,
         required:true
     },
-    password:{type:String,required:true}
+    password:{type:String,required:true},
+    city:{type:String,trim:true},
+    address:{type:String},
+    shopname:{type:String},
+    phone:{type:Number,trim:true,min:11}
 },{timestamps:true}
 ); 
 
