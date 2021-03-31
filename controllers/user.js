@@ -220,3 +220,6 @@ exports.logout = (req,res,next)=>{
         })
     })
 }
+exports.notifications = (req,res,next)=>{
+    res.status(200).send('Send to All')
+}
