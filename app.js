@@ -13,9 +13,11 @@ const paypal = require("paypal-rest-sdk");
 
 const productsRoutes = require('./routes/products')
 const ordersRoutes = require('./routes/orders');
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/users');
 const usersRoutes = require('./routes/users')
-const paymentRoutes = require('./routes/payment')
+const paymentRoutes = require('./routes/payments')
+const notificationRoutes = require('./routes/notifications')
+
 
 
 //MongoDB configuration of CRUD
@@ -105,6 +107,7 @@ app.use('/orders' , ordersRoutes);
 app.use('/user', userRoutes);
 app.use('/users',usersRoutes);
 app.use('/payment',paymentRoutes)
+app.use('/notification',notificationRoutes)
 // Handling Error
 app.use((req,res,next) => {
     const error = new Error('Not Found');

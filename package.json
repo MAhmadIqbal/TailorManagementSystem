@@ -50,7 +50,8 @@
     "os": "^0.1.1",
     "path": "^0.12.7",
     "paypal-rest-sdk": "^1.8.1",
-    "req": "^0.1.4"
+    "req": "^0.1.4",
+    "web-push": "^3.4.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

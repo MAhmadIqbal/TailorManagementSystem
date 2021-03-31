@@ -1,6 +1,7 @@
 const JWT = require("jsonwebtoken");
 const User = require("../models/user");
 const Token = require("../models/token");
+const Notification = require('../models/notifications')
 const sendEmail = require("../utils/email/sendEmail");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
@@ -172,19 +173,18 @@ exports.resetPasswordRequest =  (req, res, next) => {
     );
     return res.json(resetPasswordService);
   };
-  exports.logout= (req,res,next)=>{
-      user
-  }
     //--------------
     
   
     //------------------------
   
   
-  const signUpController = async (req, res, next) => {
-    const signupService = await signup(req.body);
-    return res.json(signupService);
-  };
+//   const signUpController = async (req, res, next) => {
+//     const signupService = await signup(req.body);
+//     return res.json(signupService);
+//   };
+
+
   //------------------------------------
 
 const signup = async (data) => {
@@ -221,5 +221,12 @@ exports.logout = (req,res,next)=>{
     })
 }
 exports.notifications = (req,res,next)=>{
-    res.status(200).send('Send to All')
+    
+    allUsers= User.find()
+    allUsers
+    .then(result=>{
+
+    })
+    res.status(200)
 }
+exports.notificationtoUser
