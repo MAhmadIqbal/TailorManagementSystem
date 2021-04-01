@@ -11,7 +11,8 @@ const orderSchema = mongoose.Schema({
     buttonColor:{type:String},
     delivery:{type:Date},
     user:{type:mongoose.Schema.Types.ObjectId, ref:'User'},
-    totalPrice:{type:Number}
+    totalPrice:{type:Number},
+    createdAt:{type:Number,default:Date.now}
 });
 
 module.exports = mongoose.model('order' , orderSchema);

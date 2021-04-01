@@ -2,6 +2,7 @@ const express=require('express')
 const Product = require('../models/product')
 const Order = require('../models/order')
 const User = require('../models/usersRest')
+const Chart = require('../models/chart')
 const router = express.Router()
 
 router.get('/',(req,res)=>{
@@ -25,6 +26,24 @@ router.get('/',(req,res)=>{
         res.status(500).send(err)
     })
     
+})
+
+router.get('/chart',(req,res)=>{
+    Order.find({createdAt:Date.now}).then(function todayTasks(){
+        Order.find().count().exec().then(tasks=>{  
+            res.status(200).json({
+                message:"tasks of the day",
+                'tasks':tasks,
+                'Date':todayTasks
+            })
+        })
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json({
+            error:err
+        })
+    })
 })
 
 module.exports = router
