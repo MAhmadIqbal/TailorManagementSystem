@@ -134,43 +134,6 @@ exports.products_post = async (req, res, next) => {
 //   });
 // };
 
-// exports.products_post = (req, res, next) => {
-//   Product.find();
-//   const product = new Product({
-//     _id: new mongoose.Types.ObjectId(),
-//     name: req.body.name,
-//     price: req.body.price,
-//     color: req.body.color,
-//     category: req.body.category,
-//     productImage: req.file.path,
-//   });
-//   product
-//     .save()
-//     .then((result) => {
-//       console.log(result);
-//       res.status(201).json;
-//       {
-//         message: "created object successfully";
-//         createdProduct: {
-//           name: result.name;
-//           price: result.price;
-//           _id: result._id;
-//           color: result.color;
-//           category: result.color;
-//           request: {
-//             type: "GET";
-//             url: "http://localhost:3000/products/" + result._id;
-//           }
-//         }
-//       }
-//     })
-//     .catch((err) => console.log(err));
-//   res.status(201).json({
-//     message: "Handling Post request to /product",
-//     createdProduct: { product },
-//   });
-// };
-
 exports.products_getId = (req, res, next) => {
   const id = req.params.productId;
   Product.findById(id)
