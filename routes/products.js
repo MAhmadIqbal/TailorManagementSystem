@@ -40,6 +40,7 @@ router.patch("/:productId", checkAuth, productsController.products_update);
 //     })
 // });
 router.get("/", productsController.products_get);
+router.get("/", productsController.getTop_Products);
 router.post("/", checkAuth, productsController.products_post);
 // router.post('/', checkAuth, upload.single('productImage'),productsController.products_post);
 router.get("/:productId");

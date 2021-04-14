@@ -45,6 +45,37 @@ exports.products_get = (req, res, next) => {
   //     })
 };
 
+exports.getTop_Products = (req, res, next) => {
+  Product.find()
+    .limit(10)
+    .select("name price _id productImage")
+    .exec()
+    .then((docs) => {
+      const response = {
+        count: docs.length,
+        products: docs.map((doc) => {
+          return {
+            name: doc.name,
+            price: doc.price,
+            productImage: doc.productImage,
+            _id: doc._id,
+            request: {
+              type: "GET",
+              url: "http://localhost:3000/products/" + doc._id,
+            },
+          };
+        }),
+      };
+      res.status(200).json(response);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+};
+
 exports.products_post = async (req, res, next) => {
   var matches = req.body.base64image.match(/^data:([A-Za-z-+/]+);base64,(.+)$/),
     response = {};

@@ -17,6 +17,17 @@ const usersRoutes = require("./routes/users");
 const paymentRoutes = require("./routes/payments");
 const notificationRoutes = require("./routes/notifications");
 const dashboardRoutes = require("./routes/dashboard");
+const tailorRoutes = require("./routes/tailors");
+const customerRoutes = require("./routes/customers");
+const fabricRoutes = require("./routes/fabrics");
+const collarRoutes = require("./routes/collars");
+const cuffRoutes = require("./routes/cuff");
+const shirtLengthRoutes = require("./routes/shirtLength");
+const colorRoutes = require("./routes/color");
+const styleRoutes = require("./routes/Style");
+const buttonColorRoutes = require("./routes/buttonColor");
+const pocketRoutes = require("./routes/pocket");
+const wearWatchRoutes = require("./routes/wearWatch");
 
 //MongoDB configuration of CRUD
 
@@ -109,6 +120,17 @@ app.use("/users", usersRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/notification", notificationRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/tailors", tailorRoutes);
+app.use("/customer", customerRoutes);
+app.use("/fabric", fabricRoutes);
+app.use("/collar", collarRoutes);
+app.use("/cuff", cuffRoutes);
+app.use("/shirtLength", shirtLengthRoutes);
+app.use("/color", colorRoutes);
+app.use("/buttonColor", buttonColorRoutes);
+app.use("/pocket", pocketRoutes);
+app.use("/wearWatch", wearWatchRoutes);
+
 // Handling Error
 app.use((req, res, next) => {
   const error = new Error("Not Found");
