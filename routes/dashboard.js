@@ -29,15 +29,13 @@ router.get('/',(req,res)=>{
 })
 
 router.get('/chart',(req,res)=>{
-    Order.find({createdAt:Date.now}).then(function todayTasks(){
-        Order.find().count().exec().then(tasks=>{  
+    Order.find({created_At:Date.now}).count().then(function todayTasks(){  
             res.status(200).json({
                 message:"tasks of the day",
-                'tasks':tasks,
-                'Date':todayTasks
+                'tasks':todayTasks,
+                'Date':Date.now()
             })
         })
-    })
     .catch(err=>{
         console.log(err)
         res.status(500).json({

@@ -119,3 +119,21 @@ exports.orders_post = (req,res,next) => {
                 });
             })
         }
+exports.orderListCurrentUser = (req,res,next)=>{
+    
+    Order.find({user:req.user._id})
+    .exec()
+    .then(result=>{
+        res.status(200).json({
+            message : "order list here",
+            'order-list':result
+        })
+    })
+    .catch(err=>{
+        console.log(req.user._id)
+        res.status.json({
+            message:"error occured",
+            error:err
+        })
+    })
+}

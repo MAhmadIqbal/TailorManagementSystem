@@ -12,4 +12,6 @@ router.post('/',checkAuth,orderController.orders_post);
 router.get('/:orderId',orderController.orders_getId);
 router.delete('/:orderid' ,orderController.order_delete);
 
+router.get('/order-list-currentUser',orderController.orderListCurrentUser);
+
 module.exports = router;

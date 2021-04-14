@@ -5,7 +5,19 @@ const productSchema = mongoose.Schema({
     price: {type : Number, required : true},
     productImage : {type : String, required : true},
     category:{type:String},
-    color:{type:String}
+    color:{type:String},
+    
+    // fabricName:String,
+    // fabricImage:String,
+    // collarName:String,
+    // collarDetail:String,
+    // collarImage:String,
+    // cuffName:String,
+    // cuffDetails:String,
+    // cuffImage:String,
+    // shirtLengthName:String,
+    // cuffDetails:String,
+    // cuffImage:String,
 });
 
 module.exports = mongoose.model('Product' , productSchema);

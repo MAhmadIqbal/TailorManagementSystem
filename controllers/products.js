@@ -1,6 +1,9 @@
 
 const mongoose = require('mongoose');
 const Product = require('../models/product');
+const Fabric = require('../models/fabric')
+const Cuff = require('../models/cuff')
+const Collar = require('../models/collar')
 const path = require('path');
 
 exports.products_get = (req,res,next) => {
@@ -130,6 +133,95 @@ exports.products_delete =  (req,res,next)=>{
         res.status(200).json({
             message : "Product Deleted",
             
+        })
+    }).catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            
+            message : 'Error found',
+            error : err
+        })
+    });
+
+}
+exports.fabric_post = (req,res,next)=>{
+    const id=Product.find(req.body.productId)
+    if(id){
+        const fabric = new Fabric({
+            _id :  mongoose.Types.ObjectId(),
+            fabric: req.body.fabric,
+            fabricImage : req.file.path,
+            product:req.body.productId
+        });
+        fabric
+            .save()
+            .then(result =>{
+                console.log(result);
+                res.status(201).json
+                    {
+                    message : "created object successfully"
+                    createdProduct : {
+                        name : result.fabric
+                        price : result.fabricImage
+                        _id : result._id
+                        product:result.productId
+                        request:{
+                            type : 'GET'
+                            url : 'http://localhost:3000/products/' + result._id
+                        }
+                    } 
+                }
+            })
+            .catch(err => console.log(err));
+        res.status(201).json({
+            message : 'Handling Post request to /product',
+            createdProduct : {product}
+        });
+    }
+}
+exports.fabrics_get = (req,res,next) => {
+    Fabric.find()
+        .exec()
+        .then(docs => {
+            const response = {
+                count : docs.length,
+                fabrics: docs.map(doc => {
+                    return{
+                        fabric : doc.fabric,
+                        fabricImage : doc.fabricImage,
+                        _id : doc._id,
+                        product:doc.productId,
+                        request:{
+                            type : 'GET',
+                            url : 'http://localhost:3000/products/' + doc._id
+                        }
+                    }
+                })
+            }
+             console.log(docs);
+             if(docs.length >= 0){
+                res.status(200).json(response);
+            }else{
+                res.status(404).json({
+                    message : 'No Entries found'
+                })
+            }
+        res.status(200).json(docs);
+      })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error : err
+            })
+    });
+}
+exports.fabric_delete =  (req,res,next)=>{
+    const id= req.params.fabricId;
+    Product.remove({_id : id}).exec()
+    .then(result=>{
+        res.status(200).json({
+            message : "Fabric Removed",
+            result
         })
     }).catch(err =>{
         console.log(err);

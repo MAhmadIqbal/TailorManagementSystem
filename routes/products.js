@@ -41,7 +41,11 @@
     router.get('/:productId',);
     router.patch('/:productId',checkAuth, productsController.products_update);
     router.delete('/:productId',checkAuth,productsController.products_delete);
-    
+
+    //for Fabric routes
+    router.post('/fabric',productsController.fabric_post)
+    router.get('/fabric',productsController.fabrics_get)
+    router.delete('/fabric',productsController.fabric_delete)
     // router.delete();
     // router.post('/:productId',(req,res,next) => {
         
