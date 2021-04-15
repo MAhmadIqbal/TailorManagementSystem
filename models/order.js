@@ -10,7 +10,7 @@ const orderSchema = mongoose.Schema({
     pocket:{type:String},
     buttonColor:{type:String},
     delivery:{type:Date},
-    user:{type:mongoose.Schema.Types.ObjectId, ref:'User'},
+    user:{type:mongoose.Schema.Types.ObjectId, ref:'User',required:true},
     totalPrice:{type:Number},
     createdAt:{type:Number,default:Date.now}
 });

@@ -121,11 +121,12 @@ exports.orders_post = (req,res,next) => {
         }
 exports.orderListCurrentUser = (req,res,next)=>{
     
-    Order.find({user:req.user._id})
+    Order.find({user:req.params.userOrderId})
     .exec()
     .then(result=>{
         res.status(200).json({
             message : "order list here",
+            'total_orders_count_placed_by_user':result.length,
             'order-list':result
         })
     })
