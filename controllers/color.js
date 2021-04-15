@@ -8,8 +8,7 @@ exports.color_get = (req, res, next) => {
     .exec()
     .then((docs) => {
       const response = {
-        count: docs.length,
-        products: docs.map((doc) => {
+        color: docs.map((doc) => {
           return {
             color: doc.color,
             _id: doc._id,
