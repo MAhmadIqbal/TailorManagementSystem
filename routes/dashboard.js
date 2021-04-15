@@ -29,7 +29,7 @@ router.get('/',(req,res)=>{
 })
 
 router.get('/chart',(req,res)=>{
-    Order.find({created_At:Date.now}).count().then(function todayTasks(){  
+    Order.find({created_At:Date.now}).count().then(function (todayTasks){  
             res.status(200).json({
                 message:"tasks of the day",
                 'tasks':todayTasks,
