@@ -52,7 +52,8 @@ exports.products_post = (req,res,next) => {
         _id : new mongoose.Types.ObjectId(),
         name: req.body.name,
         price: req.body.price,
-        productImage : req.file.path
+        productImage : req.file.path,
+        sum=0
     });
     product
         .save()
@@ -80,13 +81,14 @@ exports.products_post = (req,res,next) => {
 }
 exports.products_getId = (req,res,next)=> {
     const id=req.params.productId;
-    Product.findById(id)
+    Product.findById(id,{$set:sum+=1})
     .select( 'name price _id productImage').exec()
     .then(doc => { 
         console.log("From database", doc);
         if(doc){
             res.status(200).json({
                 product : doc,
+                
                 request : {
                     type : 'GET',
                     description : 'GET all products',

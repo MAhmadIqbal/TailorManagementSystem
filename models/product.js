@@ -6,7 +6,8 @@ const productSchema = mongoose.Schema({
     productImage : {type : String, required : true},
     category:{type:String},
     color:{type:String},
-    
+    sum:Number
+
     // fabricName:String,
     // fabricImage:String,
     // collarName:String,

@@ -74,4 +74,13 @@ exports.deleteCart = (req,res,next)=>{
         })
        })
 }
-
+exports.topProducts = (req,res,next)=>{
+    Product.find(sum).sort('desc').limit(10)
+    .exec
+    .then(docs=>{
+        res.status(200).json({
+            message:"Top Product list",
+            'products':docs
+        })
+    })
+}
