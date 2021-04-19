@@ -53,7 +53,7 @@ exports.products_post = (req,res,next) => {
         name: req.body.name,
         price: req.body.price,
         productImage : req.file.path,
-        sum=0
+        sum:0
     });
     product
         .save()
@@ -81,8 +81,9 @@ exports.products_post = (req,res,next) => {
 }
 exports.products_getId = (req,res,next)=> {
     const id=req.params.productId;
-    Product.findById(id,{$set:sum+=1})
-    .select( 'name price _id productImage').exec()
+    var sum
+    Product.findByIdAndUpdate(id,{$inc:{sum:1}})
+    .select( 'name price _id productImage sum').exec()
     .then(doc => { 
         console.log("From database", doc);
         if(doc){

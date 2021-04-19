@@ -75,12 +75,18 @@ exports.deleteCart = (req,res,next)=>{
        })
 }
 exports.topProducts = (req,res,next)=>{
-    Product.find(sum).sort('desc').limit(10)
-    .exec
+    Product.find({sum:{$gt:0}}).sort({sum:'desc'}).limit(10)
+    .exec()
     .then(docs=>{
         res.status(200).json({
             message:"Top Product list",
             'products':docs
+        })
+    })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json({
+            err
         })
     })
 }

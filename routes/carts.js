@@ -9,7 +9,7 @@ router.delete('/cart:cartId',cartController.deleteCart)
 
 //Top product list
 router.get('/top-products',cartController.topProducts)
-router.get('/top-saled-products',cartController.topSaledProducts)
+// router.get('/top-saled-products',cartController.topSaledProducts)
 
 
 

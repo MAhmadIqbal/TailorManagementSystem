@@ -18,6 +18,7 @@ const usersRoutes = require('./routes/users')
 const paymentRoutes = require('./routes/payments')
 const notificationRoutes = require('./routes/notifications')
 const dashboardRoutes = require('./routes/dashboard')
+const cartsRoutes = require('./routes/carts')
 
 
 
@@ -110,6 +111,7 @@ app.use('/users',usersRoutes);
 app.use('/payment',paymentRoutes)
 app.use('/notification',notificationRoutes)
 app.use('/dashboard',dashboardRoutes)
+app.use('/carts',cartsRoutes)
 // Handling Error
 app.use((req,res,next) => {
     const error = new Error('Not Found');
