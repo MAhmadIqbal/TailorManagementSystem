@@ -3,17 +3,17 @@ const User = require('../models/user')
 const Order = require('../models/order')
 const Product = require('../models/product')
 const cart = require('../models/cart')
-const { Mongoose } = require('mongoose')
+const mongoose = require('mongoose')
 
 exports.getCartAll = (req,res,next)=>{
-    Cart.find().populate('user')
+    Cart.find()
+    .populate('product')
     .populate('order')
-    .select()
-    .exec
+    .exec()
     .then(docs=>{
         if(!cart){
             res.status(404).json({
-                message:"No order you selected"
+                message:"No product you selected"
             })
         }
         res.status(200).json({
@@ -29,15 +29,13 @@ exports.getCartAll = (req,res,next)=>{
     })
 }
 exports.createCart = (req,res,next)=>{
-    Cart.findById(req.body.orderId)
-    .then(order=>{
-        if(!order){
-            res.status(403).json({
-                message:"No order placed of that particular order Id"
-            })
-        }const cart = new Cart({
-            _id: mongoose.Schema.types.ObjectId,
-            order:req.body.order
+    Cart.findById(req.body.userId)
+    .then(user=>{
+        const cart = new Cart({
+            _id: mongoose.Types.ObjectId(),
+            user:user,
+            product:req.body.productId,
+            order:req.body.orderId
           }) 
           return cart.save()
       
@@ -46,15 +44,15 @@ exports.createCart = (req,res,next)=>{
         res.status(200).json({
             message:"Cart has been made",
             createdAt:{
-                _id: result._id,
-                order:result.order,
-                cart:result.cart
+                id: result._id,
+                cart:result.product
             },
             })
-        }).catch(err=>{
-            console.log(err)
-            res.status(500).json({
-                error:err
+        })
+    .catch(err=>{
+        console.log(err)
+        res.status(500).json({
+        error:err
             })
         })
 }

@@ -119,6 +119,30 @@ exports.orders_post = (req,res,next) => {
                 });
             })
         }
+        exports.order_update = (req,res,next) => {
+            const id= req.params.orderId;
+            const updateOps = {};
+            // for(const ops in req.body){
+                // updateOps[ops.propName] = ops.value;
+            // }
+            updateOps[req.body.propName] = req.body.value;
+            console.log("updateOps",updateOps);
+            Oroduct.update({ _id : id},{$set: updateOps })    
+            .exec()
+            .then(result =>{
+                res.status(200).json({
+                    message : "Order Updated",
+                    request: {
+                        type : 'GET',
+                        url : 'http://localhost:3000/orders/'+ id
+                    }
+                }); 
+            }).catch(err=> {
+                res.status(500).json({
+                    err : err
+                });
+            });
+        }
 exports.orderListCurrentUser = (req,res,next)=>{
     
     Order.find({user:req.params.userOrderId})
@@ -135,6 +159,21 @@ exports.orderListCurrentUser = (req,res,next)=>{
         res.status.json({
             message:"error occured",
             error:err
+        })
+    })
+}
+exports.userOrders = (req,res,next)=>{
+    id=req.params.userId
+    Order.find({user:id}).exec((err,result)=>{
+        if(err){
+            res.status(500).json({
+                message:"error occured",
+                'error':err
+            })
+        }
+        res.status(200).json({
+            message:'Order of this loggedin user',
+            result:result
         })
     })
 }

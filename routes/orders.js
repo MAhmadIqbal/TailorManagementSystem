@@ -11,6 +11,7 @@ router.get('/',orderController.orders_getall);
 router.post('/',checkAuth,orderController.orders_post);
 router.get('/:orderId',orderController.orders_getId);
 router.delete('/:orderid' ,orderController.order_delete);
+router.delete('/:orderid' ,orderController.order_update);
 
 router.get('/order-list-currentUser/:userOrderId',orderController.orderListCurrentUser);
 
