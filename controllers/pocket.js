@@ -9,7 +9,7 @@ exports.pocket_get = (req, res, next) => {
     .then((docs) => {
       const response = {
         count: docs.length,
-        products: docs.map((doc) => {
+        pocket: docs.map((doc) => {
           return {
             pocket: doc.pocket,
             _id: doc._id,

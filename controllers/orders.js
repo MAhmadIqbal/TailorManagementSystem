@@ -165,3 +165,22 @@ exports.orders_post = async (req, res, next) => {
     next(e);
   }
 };
+
+exports.orderListCurrentUser = (req, res, next) => {
+  Order.find({ user: req.params.userOrderId })
+    .exec()
+    .then((result) => {
+      res.status(200).json({
+        message: "order list here",
+        total_orders_count_placed_by_user: result.length,
+        "order-list": result,
+      });
+    })
+    .catch((err) => {
+      console.log(req.user._id);
+      res.status.json({
+        message: "error occured",
+        error: err,
+      });
+    });
+};

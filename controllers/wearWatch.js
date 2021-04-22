@@ -9,7 +9,7 @@ exports.wearWatch_get = (req, res, next) => {
     .then((docs) => {
       const response = {
         count: docs.length,
-        products: docs.map((doc) => {
+        wearWatch: docs.map((doc) => {
           return {
             wearWatch: doc.wearWatch,
             _id: doc._id,

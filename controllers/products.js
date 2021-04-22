@@ -101,6 +101,7 @@ exports.products_post = async (req, res, next) => {
     productImage: filePath,
     color: req.body.color,
     category: req.body.category,
+    sum: 0,
   });
   try {
     fs.writeFileSync(filePath, imageBuffer, "utf8");

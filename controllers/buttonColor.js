@@ -1,18 +1,23 @@
 const ButtonColor = require("../models/buttonColor");
 const mongoose = require("mongoose");
+const path = require("path");
+
+const fs = require("fs");
+const mime = require("mime");
 
 exports.buttonColor_get = (req, res, next) => {
   ButtonColor.find()
 
-    .select("buttonColor  _id  ")
+    .select("buttonColor  _id buttonImage ")
     .exec()
     .then((docs) => {
       const response = {
         count: docs.length,
-        products: docs.map((doc) => {
+        buttons: docs.map((doc) => {
           return {
             buttonColor: doc.buttonColor,
             _id: doc._id,
+            buttonImage: doc.buttonImage,
           };
         }),
       };
@@ -28,11 +33,30 @@ exports.buttonColor_get = (req, res, next) => {
 };
 
 exports.buttonColor_post = async (req, res, next) => {
+  var matches = req.body.base64image.match(/^data:([A-Za-z-+/]+);base64,(.+)$/),
+    response = {};
+
+  if (matches.length !== 3) {
+    return new Error("Invalid input string");
+  }
+
+  response.type = matches[1];
+  response.data = new Buffer(matches[2], "base64");
+  let decodedImg = response;
+  let imageBuffer = decodedImg.data;
+  let type = decodedImg.type;
+  let extension = mime.getExtension(type);
+  let fileName = Math.floor(Math.random() * 100) + 1 + "image." + extension;
+  let filePath = path.join(__dirname, "/uploads/") + fileName;
+
   const buttonColor = new ButtonColor({
     _id: new mongoose.Types.ObjectId(),
     buttonColor: req.body.buttonColor,
+    buttonImage: filePath,
   });
   try {
+    fs.writeFileSync(filePath, imageBuffer, "utf8");
+
     const c = await buttonColor.save();
     return res.json({ status: "success", data: c });
   } catch (e) {

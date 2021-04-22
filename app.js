@@ -28,6 +28,7 @@ const styleRoutes = require("./routes/Style");
 const buttonColorRoutes = require("./routes/buttonColor");
 const pocketRoutes = require("./routes/pocket");
 const wearWatchRoutes = require("./routes/wearWatch");
+const cartsRoutes = require("./routes/carts");
 
 //MongoDB configuration of CRUD
 
@@ -130,6 +131,7 @@ app.use("/color", colorRoutes);
 app.use("/buttonColor", buttonColorRoutes);
 app.use("/pocket", pocketRoutes);
 app.use("/wearWatch", wearWatchRoutes);
+app.use("/carts", cartsRoutes);
 
 // Handling Error
 app.use((req, res, next) => {
