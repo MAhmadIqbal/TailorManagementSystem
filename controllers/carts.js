@@ -29,14 +29,14 @@ exports.getCartAll = (req,res,next)=>{
     })
 }
 exports.createCart = (req,res,next)=>{
-    Cart.findById(req.body.userId)
-    .then(user=>{
+    Cart.findById(req.body.productId)
+    .then(productRes=>{
         const cart = new Cart({
             _id: mongoose.Types.ObjectId(),
-            user:user,
-            product:req.body.productId,
-            order:req.body.orderId
+            product:productRes.name,
+            productPrice:productRes.price
           }) 
+          console.log(productRes.price)
           return cart.save()
       
         })
@@ -45,8 +45,8 @@ exports.createCart = (req,res,next)=>{
             message:"Cart has been made",
             createdAt:{
                 id: result._id,
-                cart:result.product
-            },
+                cart:result
+            }
             })
         })
     .catch(err=>{
@@ -71,6 +71,9 @@ exports.deleteCart = (req,res,next)=>{
             error:err
         })
        })
+}
+exports.removeFromCart = (req,res,next)=>{
+    
 }
 exports.topProducts = (req,res,next)=>{
     Product.find({sum:{$gt:0}}).sort({sum:'desc'}).limit(10)
