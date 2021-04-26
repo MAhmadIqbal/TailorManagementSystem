@@ -7,6 +7,18 @@ const productSchema = mongoose.Schema({
   category: { type: String },
   color: { type: String },
   sum: Number,
+
+  // fabricName:String,
+  // fabricImage:String,
+  // collarName:String,
+  // collarDetail:String,
+  // collarImage:String,
+  // cuffName:String,
+  // cuffDetails:String,
+  // cuffImage:String,
+  // shirtLengthName:String,
+  // cuffDetails:String,
+  // cuffImage:String,
 });
 
 module.exports = mongoose.model("Product", productSchema);

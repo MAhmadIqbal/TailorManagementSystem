@@ -34,6 +34,7 @@ const upload = multer({
 
 router.patch("/:productId", checkAuth, productsController.products_update);
 
+<<<<<<< HEAD
 // router.get('/about',(req,res,next) => {
 //     res.status(200).json({
 //         message: 'handling GET requests to /products/about'
@@ -46,6 +47,36 @@ router.post("/", productsController.products_post);
 router.get("/:productId");
 router.patch("/:productId", checkAuth, productsController.products_update);
 router.delete("/:productId", productsController.products_delete);
+=======
+    // router.get('/about',(req,res,next) => {
+    //     res.status(200).json({
+    //         message: 'handling GET requests to /products/about'
+    //     })
+    // });
+    router.get('/',productsController.products_get);
+    router.post('/', checkAuth, upload.single('productImage'),productsController.products_post);
+    router.get('/:productId',productsController.products_getId);
+    router.patch('/:productId',checkAuth, productsController.products_update);
+    router.delete('/:productId',checkAuth,productsController.products_delete);
+
+    //for Fabric routes
+    router.post('/fabric',productsController.fabric_post)
+    router.get('/fabric',productsController.fabrics_get)
+    router.delete('/fabric',productsController.fabric_delete)
+    // router.delete();
+    // router.post('/:productId',(req,res,next) => {
+        
+    //     const id = req.params.productId;
+    //     if(id=== 'postid'){
+    //         res.status(200).json({
+    //             message: 'This is post request with productId'
+    //         });
+    //     }else{
+    //         res.status(200).json({
+    //         message: 'This is post request with other id instead postid'
+    //         });
+    //     }
+>>>>>>> 74b3a5a7c11e91b38c0a0d4683e58b87177ae616
 
 // router.delete();
 // router.post('/:productId',(req,res,next) => {

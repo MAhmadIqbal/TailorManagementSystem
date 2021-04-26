@@ -60,4 +60,20 @@ router.get("/chart", (req, res) => {
     });
 });
 
+// router.get('/chart',(req,res)=>{
+//     Order.find({created_At:Date.now}).count().then(function (todayTasks){
+//             res.status(200).json({
+//                 message:"tasks of the day",
+//                 'tasks':todayTasks,
+//                 'Date':Date.now()
+//             })
+//         })
+//     .catch(err=>{
+//         console.log(err)
+//         res.status(500).json({
+//             error:err
+//         })
+//     })
+// })
+
 module.exports = router;
