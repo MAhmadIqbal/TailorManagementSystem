@@ -69,11 +69,19 @@ exports.deleteCart = (req,res,next)=>{
         res.status(500).json({
             message:"error has occured",
             error:err
+            })
         })
-       })
 }
 exports.removeFromCart = (req,res,next)=>{
-    
+    cart= (req.params.id)
+    Cart.find(cart,(err,result)=>{
+        if(err){
+            res.status(500).json(err)
+        }
+    return result;
+    }).then(cartfinded=>{
+        Cart.find(req.body.productId)
+    })
 }
 exports.topProducts = (req,res,next)=>{
     Product.find({sum:{$gt:0}}).sort({sum:'desc'}).limit(10)
