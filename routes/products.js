@@ -34,7 +34,6 @@ const upload = multer({
 
 router.patch("/:productId", checkAuth, productsController.products_update);
 
-<<<<<<< HEAD
 // router.get('/about',(req,res,next) => {
 //     res.status(200).json({
 //         message: 'handling GET requests to /products/about'

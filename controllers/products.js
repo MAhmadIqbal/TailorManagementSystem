@@ -45,35 +45,6 @@ exports.products_get = (req, res, next) => {
   //     })
 };
 
-exports.getTop_Products = (req, res, next) => {
-  Product.find()
-    .limit(10)
-    .select("name price _id productImage")
-    .exec()
-    .then((docs) => {
-      const response = {
-        count: docs.length,
-        products: docs.map((doc) => {
-          return {
-            name: doc.name,
-            price: doc.price,
-            productImage: doc.productImage,
-            _id: doc._id,
-            request: {
-              type: "GET",
-              url: "http://localhost:3000/products/" + doc._id,
-            },
-          };
-        }),
-      };
-      res.status(200).json(response);
-=======
-const mongoose = require('mongoose');
-const Product = require('../models/product');
-const Fabric = require('../models/fabric')
-const Cuff = require('../models/cuff')
-const Collar = require('../models/collar')
-const path = require('path');
 
 exports.products_get = (req,res,next) => {
         Product.find()
