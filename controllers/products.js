@@ -9,7 +9,7 @@ const Collar = require("../models/collar");
 
 exports.products_get = (req, res, next) => {
   Product.find()
-    .select("name price _id productImage")
+    .select("name price _id productImage category color")
     .exec()
     .then((docs) => {
       const response = {
@@ -19,6 +19,9 @@ exports.products_get = (req, res, next) => {
             name: doc.name,
             price: doc.price,
             productImage: doc.productImage,
+            color: doc.color,
+            category: doc.category,
+
             _id: doc._id,
             request: {
               type: "GET",
@@ -117,13 +120,13 @@ exports.products_post = async (req, res, next) => {
   let type = decodedImg.type;
   let extension = mime.getExtension(type);
   let fileName = Math.floor(Math.random() * 100) + 1 + "image." + extension;
-  let filePath = path.join(__dirname, "/uploads/") + fileName;
+  let filePath = path.join(__dirname, "../uploads/") + fileName;
 
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     price: req.body.price,
-    productImage: filePath,
+    productImage: `http://127.0.0.1:5000/${fileName}`,
     color: req.body.color,
     category: req.body.category,
     sum: 0,

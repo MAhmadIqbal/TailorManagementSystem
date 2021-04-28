@@ -76,11 +76,14 @@ mongoose
 
 //Morgan third-party middleware
 app.use(morgan("dev"));
-app.use("./uploads", express.static(path.join(__dirname, "./uploads")));
+// app.use("./uploads", express.static(path.join(__dirname, "./uploads")));
+
+app.use(express.static(path.join(__dirname, "./uploads")));
 
 // bodyparser
 //parse requests of content -type-application/json
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "4MB" }));
 
 //  parse requests of content-type-application
 app.use(express.json());

@@ -47,12 +47,12 @@ exports.buttonColor_post = async (req, res, next) => {
   let type = decodedImg.type;
   let extension = mime.getExtension(type);
   let fileName = Math.floor(Math.random() * 100) + 1 + "image." + extension;
-  let filePath = path.join(__dirname, "/uploads/") + fileName;
+  let filePath = path.join(__dirname, "../uploads/") + fileName;
 
   const buttonColor = new ButtonColor({
     _id: new mongoose.Types.ObjectId(),
     buttonColor: req.body.buttonColor,
-    buttonImage: filePath,
+    buttonImage: `http://127.0.0.1:5000/${fileName}`,
   });
   try {
     fs.writeFileSync(filePath, imageBuffer, "utf8");

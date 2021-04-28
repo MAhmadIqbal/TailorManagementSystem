@@ -19,13 +19,13 @@ exports.cuff_post = async (req, res, next) => {
   let type = decodedImg.type;
   let extension = mime.getExtension(type);
   let fileName = Math.floor(Math.random() * 100) + 1 + "image." + extension;
-  let filePath = path.join(__dirname, "/uploads/") + fileName;
+  let filePath = path.join(__dirname, "../uploads/") + fileName;
 
   const cuff = new Cuff({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     detail: req.body.detail,
-    cuffImage: filePath,
+    cuffImage: `http://127.0.0.1:5000/${fileName}`,
   });
   try {
     fs.writeFileSync(filePath, imageBuffer, "utf8");

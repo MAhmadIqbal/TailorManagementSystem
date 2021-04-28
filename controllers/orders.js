@@ -7,7 +7,6 @@ exports.orders_getall = async (req, res, next) => {
     .select("name orderNo  _id delivery")
     .exec()
     .then((docs) => {
-      console.log(res.status(200));
       res.status(200).json({
         count: docs.length,
 
@@ -123,8 +122,9 @@ exports.orders_post = async (req, res, next) => {
   });
 
   try {
-    const p1 = await order.save();
-    return res.json({ status: "success", data: p1 });
+    const o1 = await order.save();
+
+    return res.json({ status: "success", data: o1 });
   } catch (e) {
     next(e);
   }
