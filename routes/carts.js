@@ -2,17 +2,23 @@ const express = require('express')
 const router = express.Router()
 const cartController = require('../controllers/carts')
 const Cart = require('../models/cart')
+const Product=require('../models/product')
 
 router.get('/',cartController.getCartAll)
 //new caer route
 router.post("/cart", async (req, res) => {
-    const { productId, quantity, name, price } = req.body;
+    const { productId, quantity } = req.body;
+    
+    var product= await Product.find({_id:productId}).exec().then(results=>{
+      return results
+    })
+
+    const name=product[0].name
+    const price=product[0].price
+    const userId = req.body.userId; 
   
-    const userId = req.user; 
-  
-    try {
+    try { 
       let cart = await Cart.findOne({ userId });
-  
       if (cart) {
         //cart exists for this user
         let itemIndex = cart.products.findIndex(p => p.productId == productId);
