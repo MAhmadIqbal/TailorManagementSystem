@@ -1,10 +1,28 @@
 const express = require('express')
 const router = express.Router()
 const cartController = require('../controllers/carts')
+const cart = require('../models/cart')
 const Cart = require('../models/cart')
 const Product=require('../models/product')
 
 router.get('/',cartController.getCartAll)
+router.get('/:cartId',async (req,res)=>{
+  cartId=req.params.cartId
+  Cart.findById(cartId).exec()
+  .then(result=>{
+    res.status(201).json({
+      message:"cart of user placed here",
+      result
+    })
+  })
+  .catch(err=>{
+    console.log(err)
+    res.status(500).json({
+      message:"error",
+      error:err
+    })
+  })
+})
 //new caer route
 router.post("/cart", async (req, res) => {
     const { productId, quantity } = req.body;
@@ -48,7 +66,26 @@ router.post("/cart", async (req, res) => {
       res.status(500).send("Something went wrong");
     }
   });
-//rest of routes of cart
+//route of deleting item from cart
+ router.post('/remove-items',async (req,res)=>{
+        itemId=req.body.itemId
+        try{
+          const cart=await Cart.findOne({userId:req.body.userId})
+        if(cart){
+          const itemIndex=cart.products.findIndex(p=>p._id==itemId)
+          if(itemIndex>-1)
+          {
+            cart.products.splice(itemIndex,1)
+          }
+           await cart.save()
+          return res.status(201).send(cart)
+        }
+      }catch(err){
+        console.log(err)
+        res.status(500).send(err)
+      }
+ })
+//rest of routes of cart  
 router.post('/',cartController.createCart)
 router.delete('/:cartId',cartController.deleteCart)
 

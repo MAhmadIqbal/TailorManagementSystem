@@ -60,18 +60,18 @@ exports.deleteCart = (req,res,next)=>{
     Cart.remove({_id:req.params._id})
     .then(result=>{
         res.status(200).json({
-            message:"order removed from cart",
-
+            message:"cart removed",
+            result:result
         })
-
     }).catch(err=>{ 
         console.log(err)
         res.status(500).json({
             message:"error has occured",
             error:err
-            })
+            }) 
         })
 }
+
 exports.removeFromCart = (req,res,next)=>{
     cart= (req.params.id)
     Cart.find(cart,(err,result)=>{
