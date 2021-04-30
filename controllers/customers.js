@@ -11,7 +11,7 @@ exports.customer_get = (req, res, next) => {
     .then((docs) => {
       const response = {
         count: docs.length,
-        products: docs.map((doc) => {
+        customer: docs.map((doc) => {
           return {
             name: doc.name,
             city: doc.city,

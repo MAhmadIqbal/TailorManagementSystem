@@ -49,6 +49,7 @@ const DB = "mongodb://localhost:27017/TMS";
 
 const url =
   "mongodb+srv://node-rest:node-rest@node-rest-shop.b6c66.mongodb.net/node-rest?retryWrites=true&w=majority";
+
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
