@@ -89,10 +89,10 @@ router.post("/cart", async (req, res) => {
 router.post('/',cartController.createCart)
 router.delete('/:cartId',cartController.deleteCart)
 
-//Top product list
-router.get('/top-products',cartController.topProducts)
+// router.get('/',cartController.getCartAll)
+// router.post('/',cartController.createCart)
+// router.delete('/:cartId',cartController.deleteCart)
+// router.get('/top-products',cartController.topProducts)
 // router.get('/top-saled-products',cartController.topSaledProducts)
 
-
-
-module.exports = router
+module.exports = router;
