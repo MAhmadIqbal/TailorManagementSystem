@@ -10,9 +10,9 @@ exports.getCartAll = (req, res, next) => {
   Cart.find()
     .populate("user")
     .populate("order")
-    .select()
-    .exec.then((docs) => {
-      if (!cart) {
+    .exec()
+    .then((docs) => {
+      if (!docs) {
         res.status(404).json({
           message: "No order you selected",
         });

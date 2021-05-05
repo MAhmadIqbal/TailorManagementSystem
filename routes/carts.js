@@ -77,7 +77,7 @@ router.post("/cart", async (req, res) => {
           {
             cart.products.splice(itemIndex,1)
           }
-           await cart.save()
+          await cart.save()
           return res.status(201).send(cart)
         }
       }catch(err){
