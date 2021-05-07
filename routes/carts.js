@@ -5,10 +5,23 @@ const cart = require('../models/cart')
 const Cart = require('../models/cart')
 const Product=require('../models/product')
 
+let userIdFromToken=function(req){
+  const token1=req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token1,process.env.JWT_KEY);
+  req.userData = decoded;
+  let userId=req.userData.userId
+  return userId
+}
+
 router.get('/',cartController.getCartAll)
 router.get('/:cartId',async (req,res)=>{
-  cartId=req.params.cartId
-  Cart.findById(cartId).exec()
+  const token1=req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token1,process.env.JWT_KEY);
+  req.userData = decoded;
+  let userId=req.userData.userId
+  
+  Cart.findById(userId).exec()
+
   .then(result=>{
     res.status(201).json({
       message:"cart of user placed here",
@@ -33,8 +46,14 @@ router.post("/cart", async (req, res) => {
 
     const name=product[0].name
     const price=product[0].price
-    const userId = req.body.userId; 
-  
+    
+    const token1=req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token1,process.env.JWT_KEY);
+    req.userData = decoded;
+    let userId=req.userData.userId
+    
+    userId=userIdFromToken
+
     try { 
       let cart = await Cart.findOne({ userId });
       if (cart) {
@@ -69,8 +88,14 @@ router.post("/cart", async (req, res) => {
 //route of deleting item from cart
  router.post('/remove-items',async (req,res)=>{
         itemId=req.body.itemId
+          //get userId from token
+        const token1=req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token1,process.env.JWT_KEY);
+        req.userData = decoded;
+        let userId=req.userData.userId
+      
         try{
-          const cart=await Cart.findOne({userId:req.body.userId})
+          const cart=await Cart.findOne({userId})
         if(cart){
           const itemIndex=cart.products.findIndex(p=>p._id==itemId)
           if(itemIndex>-1)
