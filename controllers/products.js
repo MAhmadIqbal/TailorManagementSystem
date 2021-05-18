@@ -54,7 +54,7 @@ exports.products_get = (req, res, next) => {
 exports.topProducts = (req, res, next) => {
   Product.find({ sum: { $gt: 0 } })
     .sort({ sum: "desc" })
-    .limit(10)
+    .limit(2)
     .exec()
     .then((docs) => {
       res.status(200).json({
