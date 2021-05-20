@@ -13,7 +13,6 @@ const paypal = require("paypal-rest-sdk");
 const productsRoutes = require("./routes/products");
 const ordersRoutes = require("./routes/orders");
 const userRoutes = require("./routes/users");
-const usersRoutes = require("./routes/users");
 const paymentRoutes = require("./routes/payments");
 const notificationRoutes = require("./routes/notifications");
 const dashboardRoutes = require("./routes/dashboard");
@@ -51,7 +50,7 @@ const url =
   "mongodb+srv://node-rest:node-rest@node-rest-shop.b6c66.mongodb.net/node-rest?retryWrites=true&w=majority";
 
 mongoose
-  .connect(DB, {
+  .connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
