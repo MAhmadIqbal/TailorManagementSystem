@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Order = require("../models/order");
 const Product = require("../models/product");
+const cart = require("../models/cart");
 
 exports.orders_getall = async (req, res, next) => {
   await Order.find()
@@ -58,7 +59,7 @@ exports.orders_getall = async (req, res, next) => {
 //         });
 //     });
 // }
-exports.orders_getId = (req, res, next) => {
+exports = (req, res, next) => {
   Order.findById(req.params.orderId)
     .populate("product")
     .exec()
@@ -128,6 +129,28 @@ exports.orders_post = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
+};
+
+exports.order_placed = async (req, res) => {
+  const token1 = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token1, process.env.JWT_KEY);
+  const userId = decoded.userId;
+  cart
+    .find({ cart: userId })
+    .exec()
+    .then((result) => {
+      var array = result.products;
+      for (var i = 0; i <= array.length; i++) {
+        var total = array[i].price + total;
+        return total;
+      }
+      res.status(200).json({
+        message: "Order has been placed",
+        "payment method": req.body.paymentMethod,
+        "shipping Method": req.body.shippingMethod,
+        "Payment Status": req.body.paymentStatus,
+      });
+    });
 };
 
 // exports.orderListCurrentUser = (req, res, next) => {

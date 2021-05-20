@@ -9,7 +9,7 @@ exports.style_get = (req, res, next) => {
     .then((docs) => {
       const response = {
         count: docs.length,
-        products: docs.map((doc) => {
+        styles: docs.map((doc) => {
           return {
             style: doc.style,
             _id: doc._id,

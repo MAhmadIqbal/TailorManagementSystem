@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-
 const Product = require("../models/product");
 const checkAuth = require("../middlewares/checkAuth");
 const orderController = require("../controllers/orders");
@@ -12,6 +11,7 @@ router.get(
   "/order-list-currentUser/:userOrderId",
   orderController.orderListCurrentUser
 );
+router.post("/order-placed", orderController.order_placed);
 
 router.get("/", orderController.orders_getall);
 // router.post('/',checkAuth,orderController.orders_post);
