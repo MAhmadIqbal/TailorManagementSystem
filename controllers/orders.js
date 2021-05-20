@@ -19,7 +19,7 @@ exports.orders_getall = async (req, res, next) => {
 
             request: {
               type: "GET",
-              url: "http://localhost:3000/orders/" + doc._id,
+              url: "http://localhost:3000/orders/" + id,
             },
           };
         }),
@@ -60,7 +60,6 @@ exports.orders_getall = async (req, res, next) => {
 // }
 exports.orders_getId = (req, res, next) => {
   Order.findById(req.params.orderId)
-    .populate("product")
     .exec()
     .then((order) => {
       if (!order) {
@@ -114,20 +113,43 @@ exports.order_delete = (req, res, next) => {
 // };
 
 exports.orders_post = async (req, res, next) => {
-  const order = new Order({
-    _id: mongoose.Types.ObjectId(),
-    orderNo: req.body.orderNo,
-    name: req.body.name,
-    delivery: req.body.delivery,
-  });
 
-  try {
-    const o1 = await order.save();
-
-    return res.json({ status: "success", data: o1 });
-  } catch (e) {
-    next(e);
-  }
+  const token1 = req.headers.authorization.split(" ")[1];
+  const decoded  =jwt.verify(token1, process.env.JWT_KEY);
+  const userId=decoded.userId
+  Cart.find({cart:userId}).exec().then(result=>{
+    var array=result.products;
+    for(var i=0;i<=(array.length);i++){
+      var total = array[i].price+total
+      return total;
+    }
+    const order = new Order({
+      _id: mongoose.Types.ObjectId(),
+      user:userId,
+      orderNo: req.body.orderNo,
+      name: req.body.name,
+      delivery: req.body.delivery,
+      totalPrice:total,
+      paymentMethod:req.body.paymentMethod,
+      shippingMethod:req.body.shippingMethod,
+      paymentStatus:req.body.paymentStatus
+    })
+    order.save()
+    .exec((err,result)=>{
+      if(err){
+        res.status(500).send(err)
+      }
+      if(result){
+        res.status(200).json({
+          message:"Order has been placed",
+          'totalPrice':total,
+          'payment method':req.body.paymentMethod,
+          "shipping Method":req.body.shippingMethod,
+          "Payment Status":req.body.paymentStatus
+        })
+      }  
+    })
+  })
 };
 
 // exports.orderListCurrentUser = (req, res, next) => {
@@ -204,7 +226,7 @@ exports.order_update = (req, res, next) => {
   // }
   updateOps[req.body.propName] = req.body.value;
   console.log("updateOps", updateOps);
-  Oroduct.update({ _id: id }, { $set: updateOps })
+  Order.update({ _id: id }, { $set: updateOps })
     .exec()
     .then((result) => {
       res.status(200).json({
