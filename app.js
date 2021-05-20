@@ -124,7 +124,6 @@ app.use((req, res, next) => {
 app.use("/products", productsRoutes);
 app.use("/orders", ordersRoutes);
 app.use("/user", userRoutes);
-app.use("/users", usersRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/notification", notificationRoutes);
 app.use("/dashboard", dashboardRoutes);
