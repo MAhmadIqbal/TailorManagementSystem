@@ -258,6 +258,9 @@ exports.products_update = (req, res, next) => {
   // for(const ops in req.body){
   // updateOps[ops.propName] = ops.value;
   // }
+  if(updateOps===undefined||updateOps.length===0){
+    res.status(201).send('please send payload for which you want to updated!')
+  }
   updateOps[req.body.propName] = req.body.value;
   console.log("updateOps", updateOps);
   Product.update({ _id: id }, { $set: updateOps })
