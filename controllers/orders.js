@@ -122,14 +122,16 @@ exports.orders_post = async (req, res, next) => {
   Cart.find({userId:decodeduserId}).exec().then(result=>{
     var array=[];
     array=result[0].products;
+    var arraylength=array.length
     console.log("line126",array)
-    for(var i=0;i<=array.length;i++){
-      var total = array[i].price+total
-      return total;
+    for(var i=0;i<arraylength;i++){
+      var total = 0
+      total=array[i].price+total
+      console.log(total)
     }
     const order = new Order({
       _id: mongoose.Types.ObjectId(),
-      user:userId,
+      user:decodeduserId,
       orderNo: req.body.orderNo,
       name: req.body.name,
       delivery: req.body.delivery,
@@ -138,21 +140,29 @@ exports.orders_post = async (req, res, next) => {
       shippingMethod:req.body.shippingMethod,
       paymentStatus:req.body.paymentStatus
     })
-    order.save()
-    .exec((err,result)=>{
+   try{
+    order.save((err,result)=>{
       if(err){
-        res.status(500).send(err)
+        res.status(505).send(err)
       }
       if(result){
         res.status(200).json({
           message:"Order has been placed",
-          'totalPrice':total,
-          'payment method':req.body.paymentMethod,
-          "shipping Method":req.body.shippingMethod,
-          "Payment Status":req.body.paymentStatus
+          'id':result._id,
+          'totalPrice':result.total,
+          'payment method':result.paymentMethod,
+          "shipping Method":result.shippingMethod,
+          "Payment Status":result.paymentStatus
         })
       }  
     })
+    
+   }catch(err){
+     {
+       res.status(500).send(err)
+     }
+   }
+    
   })
 };
 
