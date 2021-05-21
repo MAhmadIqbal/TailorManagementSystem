@@ -148,11 +148,7 @@ exports.orders_post = async (req, res, next) => {
       if(result){
         res.status(200).json({
           message:"Order has been placed",
-          'id':result._id,
-          'totalPrice':result.total,
-          'payment method':result.paymentMethod,
-          "shipping Method":result.shippingMethod,
-          "Payment Status":result.paymentStatus
+          'Order':result
         })
       }  
     })
