@@ -6,30 +6,36 @@ const Cart = require('../models/cart')
 
 exports.orders_getall = async (req, res, next) => {
   await Order.find()
-    .select("name orderNo  _id delivery")
+    .select("name orderNo _id delivery")
     .exec()
-    .then((docs) => {
-      res.status(200).json({
+    .then(docs => {
+      if(docs.length===0){
+        res.status(404).send('Nothing has found in orders')
+      }
+      const response = {
         count: docs.length,
+        order: docs.map(doc => {
+        return {
+          id: doc._id,
+          orderNo: doc.orderNo,
+          name: doc.name,
+          delivery: doc.delivery,
 
-        order: docs.map((doc) => {
-          return {
-            id: doc._id,
-            orderNo: doc.orderNo,
-            name: doc.name,
-            delivery: doc.delivery,
-
-            request: {
-              type: "GET",
-              url: "http://localhost:3000/orders/" + id,
-            },
-          };
-        }),
-      });
+          request: {
+            type: "GET",
+            url: "http://localhost:3000/orders/" + doc._id,
+          },
+        };
+      })
+      }
+      
+      res.status(200).json(response);
     })
-    .catch((err) => {
+    .catch(err => {
+      console.log(err)
       res.status(500).json({
-        error: err,
+        message:'error occured',
+        'error': err
       });
     });
 };
@@ -119,7 +125,11 @@ exports.orders_post = async (req, res, next) => {
   const token1 = req.headers.authorization.split(" ")[1];
   const decoded  =jwt.verify(token1, process.env.JWT_KEY);
   const decodeduserId=decoded.userId
-  Cart.find({userId:decodeduserId}).exec().then(result=>{
+  Cart.find({userId:decodeduserId}).exec()
+  .then(result=>{
+    if(result==undefined|| result.length===0){
+      res.status(404).send('nothing in cart has found')
+    }
     var array=[];
     array=result[0].products;
     var arraylength=array.length

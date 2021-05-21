@@ -21,12 +21,11 @@ exports.products_get = (req, res, next) => {
             productImage: doc.productImage,
             color: doc.color,
             category: doc.category,
-
             _id: doc._id,
-            request: {
-              type: "GET",
-              url: "http://localhost:3000/products/" + doc._id,
-            },
+              request: {
+                type: "GET",
+                url: "http://localhost:3000/products/" + doc._id,
+              },
           };
         }),
       };
