@@ -254,22 +254,19 @@ exports.products_getId = (req, res, next) => {
 };
 exports.products_update = (req, res, next) => {
   const id = req.params.productId;
-  const updateOps = {};
-  // for(const ops in req.body){
-  // updateOps[ops.propName] = ops.value;
-  // }
-  if(updateOps===undefined||updateOps.length===0){
-    res.status(201).send('please send payload for which you want to updated!')
-  }
-  updateOps[req.body.propName] = req.body.value;
-  console.log("updateOps", updateOps);
-  Product.update({ _id: id }, { $set: updateOps })
+  console.log(req.body)
+        // const updateOps = {};
+        // for(const ops in req.body){
+        // updateOps[ops.propName] = ops.value;
+        // }console.log("updateOps", updateOps);
+  Product.updateMany({ _id: id }, { $set: req.body })
     .exec()
     .then((result) => {
       res.status(200).json({
         message: "Product Updated",
         request: {
           type: "GET",
+          result,
           url: "http://localhost:3000/products/" + id,
         },
       });

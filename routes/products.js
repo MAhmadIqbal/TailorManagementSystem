@@ -33,7 +33,7 @@ const upload = multer({
   },
 });
 
-router.patch("/:productId", checkAuth, productsController.products_update);
+router.patch("/:productId",  productsController.products_update);
 
 // router.get('/about',(req,res,next) => {
 //     res.status(200).json({
@@ -45,7 +45,6 @@ router.get("/", productsController.products_get);
 router.post("/", productsController.products_post);
 // router.post('/', checkAuth, upload.single('productImage'),productsController.products_post);
 router.get("/:productId");
-router.patch("/:productId", checkAuth, productsController.products_update);
 router.delete("/:productId", productsController.products_delete);
 router.get("/top-products", productsController.topProducts);
 
