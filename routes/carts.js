@@ -4,12 +4,12 @@ const cartController = require('../controllers/carts')
 const cart = require('../models/cart')
 const Cart = require('../models/cart')
 const Product=require('../models/product')
+const jwt=require('jsonwebtoken')
 
 let userIdFromToken=function(req){
   const token1=req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token1,process.env.JWT_KEY);
-  req.userData = decoded;
-  let userId=req.userData.userId
+  let userId=decoded.userId;
   return userId
 }
 
@@ -49,13 +49,14 @@ router.post("/cart", async (req, res) => {
     
     const token1=req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token1,process.env.JWT_KEY);
-    req.userData = decoded;
-    let userId=req.userData.userId
     
-    userId=userIdFromToken
+     console.log(decoded)
+     let userId=decoded.userId
+    
+    
 
     try { 
-      let cart = await Cart.findOne({ userId });
+      let cart = await Cart.findById(userId);
       if (cart) {
         //cart exists for this user
         let itemIndex = cart.products.findIndex(p => p.productId == productId);

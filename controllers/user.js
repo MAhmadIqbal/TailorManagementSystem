@@ -1,6 +1,7 @@
 const JWT = require("jsonwebtoken");
 const User = require("../models/user");
 const Token = require("../models/token");
+const Cart = require('../models/cart')
 const Notification = require('../models/notifications')
 const sendEmail = require("../utils/email/sendEmail");
 const crypto = require("crypto");

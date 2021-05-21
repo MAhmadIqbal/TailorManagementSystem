@@ -8,7 +8,7 @@ module.exports = (req,res,next)=>{
         Token.find({token:token1},(err,result)=>{
             if(err) return err;
             if(result && result!='' && result != 'undefined'){
-                console.log("line11/checkAuth/middleware",result)
+                console.log("checkAuth Middleware passed")
                 req.userData = decoded
                 return next();
             }

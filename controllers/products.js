@@ -262,6 +262,7 @@ exports.products_update = (req, res, next) => {
   updateOps[req.body.propName] = req.body.value;
   console.log("updateOps", updateOps);
   Product.update({ _id: id }, { $set: updateOps })
+    .save()
     .exec()
     .then((result) => {
       res.status(200).json({

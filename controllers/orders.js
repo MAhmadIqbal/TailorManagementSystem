@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Order = require("../models/order");
 const Product = require("../models/product");
+const jwt=require('jsonwebtoken')
+const Cart = require('../models/cart')
 
 exports.orders_getall = async (req, res, next) => {
   await Order.find()
@@ -116,10 +118,12 @@ exports.orders_post = async (req, res, next) => {
 
   const token1 = req.headers.authorization.split(" ")[1];
   const decoded  =jwt.verify(token1, process.env.JWT_KEY);
-  const userId=decoded.userId
-  Cart.find({cart:userId}).exec().then(result=>{
-    var array=result.products;
-    for(var i=0;i<=(array.length);i++){
+  const decodeduserId=decoded.userId
+  Cart.find({userId:decodeduserId}).exec().then(result=>{
+    var array=[];
+    array=result[0].products;
+    console.log("line126",array)
+    for(var i=0;i<=array.length;i++){
       var total = array[i].price+total
       return total;
     }
