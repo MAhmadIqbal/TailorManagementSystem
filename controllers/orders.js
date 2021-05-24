@@ -246,11 +246,12 @@ exports.order_update = (req, res, next) => {
   // }
   updateOps[req.body.propName] = req.body.value;
   console.log("updateOps", updateOps);
-  Order.update({ _id: id }, { $set: updateOps })
+  Order.update({ _id: id }, { $set: req.body})
     .exec()
     .then((result) => {
       res.status(200).json({
         message: "Order Updated",
+        "Updated Order":result,
         request: {
           type: "GET",
           url: "http://localhost:3000/orders/" + id,
