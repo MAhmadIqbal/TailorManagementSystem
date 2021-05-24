@@ -67,7 +67,8 @@ exports.orders_getall = async (req, res, next) => {
 //     });
 // }
 exports.orders_getId = (req, res, next) => {
-  Order.findById(req.params.orderId)
+  const id=req.params.orderId
+  Order.findById({_id:id})
     .exec()
     .then((order) => {
       if (!order) {
@@ -79,7 +80,7 @@ exports.orders_getId = (req, res, next) => {
         order: order,
         request: {
           type: "GET",
-          url: "http://localhost:3000/orders",
+          url: "http://localhost:5000/orders",
         },
       });
     })
@@ -90,7 +91,8 @@ exports.orders_getId = (req, res, next) => {
     });
 };
 exports.order_delete = (req, res, next) => {
-  Order.remove({ _id: req.params.orderid })
+  const id=req.params.orderId
+  Order.remove({ _id: id })
     .exec()
     .then((result) => {
       res.status(200).json({
@@ -246,7 +248,7 @@ exports.order_update = (req, res, next) => {
   // }
   updateOps[req.body.propName] = req.body.value;
   console.log("updateOps", updateOps);
-  Order.update({ _id: id }, { $set: req.body})
+  Order.updateMany({ _id: id }, { $set: req.body})
     .exec()
     .then((result) => {
       res.status(200).json({
@@ -254,7 +256,7 @@ exports.order_update = (req, res, next) => {
         "Updated Order":result,
         request: {
           type: "GET",
-          url: "http://localhost:3000/orders/" + id,
+          url: "http://localhost:3000/orders/" + result._id,
         },
       });
     })
