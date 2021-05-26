@@ -107,7 +107,7 @@ exports.products_post = async (req, res, next) => {
   var matches = req.body.base64image.match(/^data:([A-Za-z-+/]+);base64,(.+)$/),
     response = {};
 
-  console.log("matches : ", matches);
+  
   if (matches.length !== 3) {
     return new Error("Invalid input string");
   }
@@ -140,37 +140,37 @@ exports.products_post = async (req, res, next) => {
   }
 };
 
-// exports.products_getId = (req, res, next) => {
-//   const id = req.params.productId;
-//   var sum;
-//   Product.findByIdAndUpdate(id, { $inc: { sum: 1 } })
-//     .select("name price _id productImage sum")
-//     .exec()
-//     .then((doc) => {
-//       console.log("From database", doc);
-//       if (doc) {
-//         res.status(200).json({
-//           product: doc,
+exports.products_getId = (req, res, next) => {
+  const id = req.params.productId;
+  var sum;
+  Product.findByIdAndUpdate(id, { $inc: { sum: 1 } })
+    .select("name price _id productImage sum")
+    .exec()
+    .then((doc) => {
+      console.log("From database", doc);
+      if (doc) {
+        res.status(200).json({
+          product: doc,
 
-//           request: {
-//             type: "GET",
-//             description: "GET all products",
-//             url: "http://localhost:3000/products",
-//           },
-//         });
-//       } else {
-//         res
-//           .status(404)
-//           .json({ message: "No Valid entry found for provided ID" });
-//       }
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(500).json({
-//         error: err,
-//       });
-//     });
-// };
+          request: {
+            type: "GET",
+            description: "GET all products",
+            url: "http://localhost:5000/products",
+          },
+        });
+      } else {
+        res
+          .status(404)
+          .json({ message: "No Valid entry found for provided ID" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+};
 
 // exports.products_post = (req, res, next) => {
 //   Product.find();
@@ -225,33 +225,33 @@ exports.products_post = async (req, res, next) => {
 //   });
 // };
 
-exports.products_getId = (req, res, next) => {
-  const id = req.params.productId;
-  Product.findById(id)
-    .select("name price _id productImage")
-    .exec()
-    .then((doc) => {
-      console.log("From database", doc);
-      if (doc) {
-        res.status(200).json({
-          product: doc,
-          request: {
-            type: "GET",
-            description: "GET all products",
-            url: "http://localhost:3000/products",
-          },
-        });
-      } else {
-        res
-          .status(404)
-          .json({ message: "No Valid entry found for provided ID" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
-    });
-};
+// exports.products_getId = (req, res, next) => {
+//   const id = req.params.productId;
+//   Product.findById(id)
+//     .select("name price _id productImage")
+//     .exec()
+//     .then((doc) => {
+//       console.log("From database", doc);
+//       if (doc) {
+//         res.status(200).json({
+//           product: doc,
+//           request: {
+//             type: "GET",
+//             description: "GET all products",
+//             url: "http://localhost:3000/products",
+//           },
+//         });
+//       } else {
+//         res
+//           .status(404)
+//           .json({ message: "No Valid entry found for provided ID" });
+//       }
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).json({ error: err });
+//     });
+// };
 exports.products_update = (req, res, next) => {
   const id = req.params.productId;
   console.log(req.body)
