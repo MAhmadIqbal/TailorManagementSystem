@@ -163,6 +163,7 @@ exports.resetPasswordRequest = async (req, res, next) => {
     const requestPasswordReset = await requestPasswordResetService(
       req.body.email
     );
+
     res.status(200).json(requestPasswordReset);
   };
   
@@ -172,7 +173,7 @@ exports.resetPasswordRequest = async (req, res, next) => {
       req.body.token,
       req.body.newPassword
     );
-    return res.json(resetPassword);
+    return res.send(`Password Updated:${resetPassword} Please login again!`);
   };
     //--------------
     
