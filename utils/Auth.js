@@ -5,6 +5,7 @@ const {SECRET} = require('../config/app');
 const jwt = require('jsonwebtoken');
 const path = require('path')
 const crypto = require('crypto')
+const nodemailer = require('nodemailer')
 
 const Token=require('../models/token')
 //set env variables
@@ -133,38 +134,47 @@ let user= await User.findOne({email})
   
     let resetToken = crypto.randomBytes(32).toString("hex");
     const hash = await bcrypt.hash(resetToken, Number(bcryptSalt));
-    
-    await new Token({
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    console.log(otp)
+    const newtoken=await new Token({
       userId: user._id,
       token: hash,
-      createdAt: Date.now(),
-    }).save();
+      otp:otp,
+      createdAt: Date.now()
+    })
+    newtoken.save();
+    
+    return (newtoken);
+    // const link = `${clientURL}/passwordReset?token=${resetToken}&id=${user._id}`;
   
-    const link = `${clientURL}/passwordReset?token=${resetToken}&id=${user._id}`;
-  
-    sendEmail(
-      user.email,
-      "Password Reset Request",
-      {
-        name: user.name,
-        link: link,
-      },
-      "./template/requestResetPassword.handlebars"
-    );
-    return link;
+    // sendEmail(
+    //   user.email,
+    //   "Password Reset Request",
+    //   {
+    //     name: user.name,
+    //     link: link,
+    //   },
+    //   "./template/requestResetPassword.handlebars"
+    // );
+    // return link;
   };
   //forget password by token
   const resetPasswordService = async (userId, token, password) => {
-    let passwordResetToken = await Token.findOne({ userId });
+    let passwordResetToken = await Token.findOne({userId:userId});
+    console.log(passwordResetToken)
   
     if (!passwordResetToken) {
       throw new Error("Invalid or expired password reset token");
+      
     }
-  
-    const isValid = await bcrypt.compare(token, passwordResetToken.token);
-  
+    console.log(passwordResetToken.token)
+    console.log(token)
+    
+    const isValid = bcrypt.compare(token, passwordResetToken.token);
+    console.log(isValid)
     if (!isValid) { 
       throw new Error("Invalid or expired password reset token");
+        
     }
   
     const hash = await bcrypt.hash(password, Number(bcryptSalt));
@@ -177,14 +187,14 @@ let user= await User.findOne({email})
   
     const user = await User.findById({ _id: userId });
   
-    sendEmail(
-      user.email,
-      "Password Reset Successfully",
-      {
-        name: user.name,
-      },
-      "./template/resetPassword.handlebars"
-    );
+    // sendEmail(
+    //   user.email,
+    //   "Password Reset Successfully",
+    //   {
+    //     name: user.name,
+    //   },
+    //   "./template/resetPassword.handlebars"
+    // );
   
     await passwordResetToken.deleteOne();
   

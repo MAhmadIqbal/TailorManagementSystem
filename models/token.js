@@ -9,6 +9,7 @@ const tokenSchema = mongoose.Schema({
         type:String,
         required:true,
     },
+    otp:String,
     createdAt:{
         type:Date,
         required:true,

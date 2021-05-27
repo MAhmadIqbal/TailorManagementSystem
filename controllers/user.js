@@ -159,20 +159,20 @@ exports.userAll = (req,res,next)=>{
             });
         })
 }
-exports.resetPasswordRequest =  (req, res, next) => {
-    const requestPasswordReset = requestPasswordResetService(
+exports.resetPasswordRequest = async (req, res, next) => {
+    const requestPasswordReset = await requestPasswordResetService(
       req.body.email
     );
-    return res.json(requestPasswordReset);
+    res.status(200).json(requestPasswordReset);
   };
   
-  exports.resetPassword = (req, res, next) => {
-    const resetPasswordService = resetPasswordService(
+  exports.resetPassword =async (req, res, next) => {
+    const resetPassword =await resetPasswordService(
       req.body.userId,
       req.body.token,
-      req.body.password
+      req.body.newPassword
     );
-    return res.json(resetPasswordService);
+    return res.json(resetPassword);
   };
     //--------------
     
