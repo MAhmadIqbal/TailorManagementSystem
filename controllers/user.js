@@ -179,7 +179,11 @@ exports.resetPasswordRequest = async (req, res, next) => {
     
   
     //------------------------
-  
+    exports.sendMail =async (req, res, next) => {
+     sendEmail
+        
+        return res.send(`Password Updated:${resetPassword} Please login again!`);
+      };
   
 //   const signUpController = async (req, res, next) => {
 //     const signupService = await signup(req.body);

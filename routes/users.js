@@ -18,10 +18,11 @@
     //-----------------User logout route  here------- 
     router.get('/logout',userController.logout);
     //---------------notifications routes here-----------
-
+    
     // router.get('/sendtoAll',userController.notifications);
     // router.get('/sendtoUser/:id',userController.notificationtoUser)
     
+    router.get('/sendemail',userController.sendMail);
     //---------------------------------------------------------------
 
     module.exports = router;
