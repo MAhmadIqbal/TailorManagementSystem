@@ -8,7 +8,7 @@ const expressValidator = require("express-validator");
 const expressSession = require("express-session");
 
 const engines = require("consolidate");
-const paypal = require("paypal-rest-sdk");
+// const paypal = require("paypal-rest-sdk");
 
 const productsRoutes = require("./routes/products");
 const ordersRoutes = require("./routes/orders");
@@ -97,13 +97,13 @@ app.engine("ejs", engines.ejs);
 app.set("views", "./views");
 app.set("view engine", "ejs");
 
-paypal.configure({
-  mode: "sandbox", //sandbox or live
-  client_id:
-    "AarUi7DfcZaVwTyuHOE2qMPGP1Gy65T8KNHicseSgSXB-gm_2upRM74fU-MKmslNaHKqNOUsxMrNv9I-",
-  client_secret:
-    "EI0ea3hVzYFwuts33i0RUVhxF48woSUSg7lwNbkImLrHpcEYpUmJPRXdf4CXn4kFacsRoZ-62cn9Xe6h",
-});
+// paypal.configure({
+//   mode: "sandbox", //sandbox or live
+//   client_id:
+//     "AarUi7DfcZaVwTyuHOE2qMPGP1Gy65T8KNHicseSgSXB-gm_2upRM74fU-MKmslNaHKqNOUsxMrNv9I-",
+//   client_secret:
+//     "EI0ea3hVzYFwuts33i0RUVhxF48woSUSg7lwNbkImLrHpcEYpUmJPRXdf4CXn4kFacsRoZ-62cn9Xe6h",
+// });
 // headers handling cors error.
 
 app.use((req, res, next) => {
