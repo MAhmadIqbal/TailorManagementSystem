@@ -2,43 +2,54 @@ const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
 const fs = require("fs");
 const path = require("path");
+const { getMaxListeners } = require("../../models/token");
+const { info } = require("console");
 
-const sendEmail = async (email, subject, payload, template) => {
+const sendEmail = async (email, subject,text) => {
   try {
     // create reusable transporter object using the default SMTP transport
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: 465,
+      // host: process.env.EMAIL_HOST,
+      service:'gmail',
+      // port: 465,
       auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD, // naturally, replace both with your real credentials or an application-specific password
+        user: 'ahmad1.ngxoft@gmail.com',
+        pass: 'ngxoft@019527', // naturally, replace both with your real credentials or an application-specific password
       },
     });
 
-    const source = fs.readFileSync(path.join(__dirname, template), "utf8");
-    const compiledTemplate = handlebars.compile(source);
+    // const source = fs.readFileSync(path.join(__dirname, template), "utf8");
+    // const compiledTemplate = handlebars.compile(source);
     const options = () => {
       return {
-        from: process.env.FROM_EMAIL,
+        from: 'ahmadiqbalpu@gmail.com',
         to: email,
         subject: subject,
-        html: compiledTemplate(payload),
+        text:text
+        // html: compiledTemplate(payload),
       };
     };
 
     // Send email
     transporter.sendMail(options(), (error, info) => {
       if (error) {
-        return error;
+        console.log(error)
+        throw new error("error occured in sending email");
       } else {
-        return res.status(200).json({
-          success: true,
-        });
+        console.log('Email sent '+info.response)
+        //  res.status(200).json({
+        //   success: true,
+        //   'information':info.response
+        // });
+        const emailStatus="email sent to"; 
+
+        return true
       }
     });
   } catch (error) {
     return error;
   }
+  return true
 };
 
 /*

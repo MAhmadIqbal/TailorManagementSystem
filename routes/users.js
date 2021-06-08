@@ -22,7 +22,7 @@
     // router.get('/sendtoAll',userController.notifications);
     // router.get('/sendtoUser/:id',userController.notificationtoUser)
     
-    router.get('/sendemail',userController.sendMail);
+    router.post('/sendemail',userController.sendMail);
     //---------------------------------------------------------------
 
     module.exports = router;

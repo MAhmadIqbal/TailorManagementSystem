@@ -180,9 +180,14 @@ exports.resetPasswordRequest = async (req, res, next) => {
   
     //------------------------
     exports.sendMail =async (req, res, next) => {
-     sendEmail
-        
-        return res.send(`Password Updated:${resetPassword} Please login again!`);
+     const emailsend=await sendEmail(
+         req.body.email,
+         req.body.subject,
+         req.body.text,
+        //  req.body.payload,
+        //  req.body.template,
+     )
+        return res.status(200).send(`email sent:${emailsend}`);
       };
   
 //   const signUpController = async (req, res, next) => {
