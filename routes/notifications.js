@@ -1,31 +1,23 @@
-const router = require('express').Router();
-const Post = require('../models/notifications');
 
-router.get('/', (req, res, next) => {
-    Post.find({}, {title: true}).exec((err, posts) => {
-        res.render('index.hbs', {posts});
+var express = require('express');
+var app = require('express')();
+const router = express.Router()
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+app.get('/', function(req, res) {
+   res.sendfile('index.html');
+});
+
+
+io.on('connection', function (socket) {
+  socket.on( 'new_notification', function( data ) {
+    console.log(data.title,data.message);
+    io.sockets.emit( 'show_notification', { 
+      title: data.title, 
+      message: data.message, 
+      icon: data.icon, 
     });
+  });
 });
-
-router.get('/posts/:id', (req, res, next) => {
-    Post.findOne({_id: req.params.id}).exec((err, post) => {
-        res.render('post', {post});
-    });
-});
-
-router.post('/posts/:id', (req, res, next) => {
-    Post.findByIdAndUpdate(req.params.id, { body: req.body.body }, (err, post) => {
-            let Pusher = require('pusher');
-            let pusher = new Pusher({
-                appId: process.env.PUSHER_APP_ID,
-                key: process.env.PUSHER_APP_KEY,
-                secret: process.env.PUSHER_APP_SECRET,
-                cluster: process.env.PUSHER_APP_CLUSTER
-            });
-
-            pusher.trigger('notifications', 'post_updated', post, req.headers['x-socket-id']);
-            res.send('');
-        });
-});
-
-module.exports = router;
+module.exports  =  router

@@ -136,6 +136,7 @@ exports.orders_post = async (req, res, next) => {
     array=result[0].products;
     var arraylength=array.length
     console.log("line126",array)
+    cartId=result[0]._id
     for(var i=0;i<arraylength;i++){
       var total = 0
       total=array[i].price+total
@@ -144,6 +145,7 @@ exports.orders_post = async (req, res, next) => {
     const order = new Order({
       _id: mongoose.Types.ObjectId(),
       user:decodeduserId,
+      cart:cartId,
       orderNo: req.body.orderNo,
       name: req.body.name,
       delivery: req.body.delivery,

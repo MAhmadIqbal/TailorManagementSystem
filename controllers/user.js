@@ -106,7 +106,10 @@ exports.usersSignUp = (req,res,next)=>{
                         token:tokengen
                     })
                     tokentoSave.save().then(result=>{
-                        res.status(200).json({message:"token saved"})
+                        res.status(200).json({
+                            message:"token saved",
+                            result:result
+                    })
                         console.log("token saved")
                     }).catch(err=>{
                         console.log(err);
