@@ -14,7 +14,7 @@ let userIdFromToken=function(req){
 }
 
 router.get('/',cartController.getCartAll)
-router.get('/byCartId',async (req,res)=>{
+router.get('/byitem_id',async (req,res)=>{
   const token1=req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token1,process.env.JWT_KEY);
   if(!decoded){
@@ -23,7 +23,7 @@ router.get('/byCartId',async (req,res)=>{
   req.userData = decoded;
   let userId=req.userData.userId
   
-  Cart.findById(userId).exec()
+  Cart.findOne({userId}).exec()
 
   .then(result=>{
     res.status(201).json({
