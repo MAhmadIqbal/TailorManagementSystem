@@ -14,9 +14,12 @@ let userIdFromToken=function(req){
 }
 
 router.get('/',cartController.getCartAll)
-router.get('/:cartId',async (req,res)=>{
+router.get('/byCartId',async (req,res)=>{
   const token1=req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token1,process.env.JWT_KEY);
+  if(!decoded){
+    res.status(403).send('Please login and pass the token')
+  }
   req.userData = decoded;
   let userId=req.userData.userId
   
@@ -51,15 +54,15 @@ router.post("/cart", async (req, res) => {
     const decoded = jwt.verify(token1,process.env.JWT_KEY);
     
      console.log(decoded)
-     let userId=decoded.userId
+     let userid=decoded.userId
     
     
 
     try { 
-      let cart = await Cart.findById(userId);
+      let cart = await Cart.findOne({userId:userid});
       if (cart) {
         //cart exists for this user
-        let itemIndex = cart.products.findIndex(p => p.productId == productId);
+        let itemIndex =await cart.products.findIndex(p => p.productId == productId);
   
         if (itemIndex > -1) {
           //product exists in the cart, update the quantity
