@@ -43,12 +43,13 @@ router.get('/byitem_id',async (req,res)=>{
 router.post("/cart", async (req, res) => {
     const { productId, quantity } = req.body;
     
-    var product= await Product.find({_id:productId}).exec().then(results=>{
+    var product= await Product.findOne({_id:productId}).exec().then(results=>{
       return results
     })
-
-    const name=product[0].name
-    const price=product[0].price
+    console.log(product)
+    
+      const name=product.name
+      const price=product.price
     
     const token1=req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token1,process.env.JWT_KEY);
@@ -78,7 +79,7 @@ router.post("/cart", async (req, res) => {
       } else {
         //no cart for user, create new cart
         const newCart = await Cart.create({
-          userId,
+          userid,
           products: [{ productId, quantity, name, price }]
         });
   

@@ -46,8 +46,8 @@ mongoose.Promise = global.Promise;
 const DB = "mongodb://localhost:27017/TMS";
 // console.log(DB)
 
-const url =
-  "mongodb+srv://node-rest:node-rest@node-rest-shop.b6c66.mongodb.net/node-rest?retryWrites=true&w=majority";
+const url ="mongodb://node-rest:node-rest@node-rest-shop-shard-00-00.b6c66.mongodb.net:27017,node-rest-shop-shard-00-01.b6c66.mongodb.net:27017,node-rest-shop-shard-00-02.b6c66.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-j0aou5-shard-0&authSource=admin&retryWrites=true&w=majority"
+  const urlof3="mongodb+srv://node-rest:node-rest@node-rest-shop.b6c66.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
 mongoose
   .connect(url, {
