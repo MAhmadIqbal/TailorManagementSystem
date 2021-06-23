@@ -3,121 +3,116 @@ const router = express.Router()
 const cartController = require('../controllers/carts')
 const cart = require('../models/cart')
 const Cart = require('../models/cart')
-const Product=require('../models/product')
-const jwt=require('jsonwebtoken')
+const Product = require('../models/product')
+const jwt = require('jsonwebtoken')
 
-let userIdFromToken=function(req){
-  const token1=req.headers.authorization.split(" ")[1];
-  const decoded = jwt.verify(token1,process.env.JWT_KEY);
-  let userId=decoded.userId;
+let userIdFromToken = function (req) {
+  const token1 = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token1, process.env.JWT_KEY);
+  let userId = decoded.userId;
   return userId
 }
 
-router.get('/',cartController.getCartAll)
-router.get('/byitem_id',async (req,res)=>{
-  const token1=req.headers.authorization.split(" ")[1];
-  const decoded = jwt.verify(token1,process.env.JWT_KEY);
-  if(!decoded){
+router.get('/', cartController.getCartAll)
+router.get('/byitem_id', async (req, res) => {
+  const token1 = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token1, process.env.JWT_KEY);
+  if (!decoded) {
     res.status(403).send('Please login and pass the token')
   }
   req.userData = decoded;
-  let userId=req.userData.userId
-  
-  Cart.findOne({userId}).exec()
+  let userId = req.userData.userId
 
-  .then(result=>{
-    res.status(201).json({
-      message:"cart of user placed here",
-      result
+  Cart.findOne({ userId }).exec()
+
+    .then(result => {
+      res.status(201).json({
+        message: "cart of user placed here",
+        result
+      })
     })
-  })
-  .catch(err=>{
-    console.log(err)
-    res.status(500).json({
-      message:"error",
-      error:err
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({
+        message: "error",
+        error: err
+      })
     })
-  })
 })
 //new caer route
 router.post("/cart", async (req, res) => {
-    const { productId, quantity } = req.body;
-    
-    var product= await Product.findOne({_id:productId}).exec().then(results=>{
-      return results
-    })
-    console.log(product)
-    
-      const name=product.name
-      const price=product.price
-    
-    const token1=req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token1,process.env.JWT_KEY);
-    
-     console.log(decoded)
-     let userid=decoded.userId
-    
-    
+  const { productId, quantity } = req.body;
 
-    try { 
-      let cart = await Cart.findOne({userId:userid});
-      if (cart) {
-        //cart exists for this user
-        let itemIndex =await cart.products.findIndex(p => p.productId == productId);
-  
-        if (itemIndex > -1) {
-          //product exists in the cart, update the quantity
-          let productItem = cart.products[itemIndex];
-          productItem.quantity = quantity;
-          cart.products[itemIndex] = productItem;
-        } else {
-          //product does not exists in cart, add new product item
-          cart.products.push({ productId, quantity, name, price });
-        }
-        cart = await cart.save();
-        return res.status(201).send(cart);
+  var product = await Product.findOne({ _id: productId }).exec().then(results => {
+    return results
+  })
+  console.log(product)
+  const name = product.name
+  const price = product.price
+
+  const token1 = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token1, process.env.JWT_KEY);
+
+  console.log(decoded)
+  let userid = decoded.userId
+  try {
+    let cart = await Cart.findOne({ userId: userid });
+    if (cart) {
+      //cart exists for this user
+      let itemIndex = await cart.products.findIndex(p => p.productId == productId);
+
+      if (itemIndex > -1) {
+        //product exists in the cart, update the quantity
+        let productItem = cart.products[itemIndex];
+        productItem.quantity = quantity;
+        cart.products[itemIndex] = productItem;
       } else {
-        //no cart for user, create new cart
-        const newCart = await Cart.create({
-          userid,
-          products: [{ productId, quantity, name, price }]
-        });
-  
-        return res.status(201).send(newCart);
+        //product does not exists in cart, add new product item
+        cart.products.push({ productId, quantity, name, price });
       }
-    } catch (err) {
-      console.log(err);
-      res.status(500).send("Something went wrong");
+      cart = await cart.save();
+      return res.status(201).send(cart);
+    } else {
+      //no cart for user, create new cart
+      const newCart = await Cart.create({
+        userid,
+        products: [{ productId, quantity, name, price }]
+      });
+
+      return res.status(201).send(newCart);
     }
-  });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Something went wrong");
+  }
+});
 //route of deleting item from cart
- router.post('/remove-items',async (req,res)=>{
-        itemId=req.body.itemId
-          //get userId from token
-        const token1=req.headers.authorization.split(" ")[1];
-        const decoded = jwt.verify(token1,process.env.JWT_KEY);
-        req.userData = decoded;
-        let userId=req.userData.userId
-      
-        try{
-          const cart=await Cart.findOne({userId})
-        if(cart){
-          const itemIndex=cart.products.findIndex(p=>p._id==itemId)
-          if(itemIndex>-1)
-          {
-            cart.products.splice(itemIndex,1)
-          }
-          await cart.save()
-          return res.status(201).send(cart)
-        }
-      }catch(err){
-        console.log(err)
-        res.status(500).send(err)
+router.post('/remove-items', async (req, res) => {
+  itemId = req.body.itemId
+  //get userId from token
+  const token1 = req.headers.authorization.split(" ")[1];
+  const decoded = jwt.verify(token1, process.env.JWT_KEY);
+  req.userData = decoded;
+  let userId = req.userData.userId
+
+  try {
+    const cart = await Cart.findOne({ userId })
+    if (cart) {
+      const itemIndex = cart.products.findIndex(p => p._id == itemId)
+      if (itemIndex > -1) {
+        cart.products.splice(itemIndex, 1)
       }
- })
+      await cart.save()
+      return res.status(201).send(cart)
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).send(err)
+  }
+})
 //rest of routes of cart  
-router.post('/',cartController.createCart)
-router.delete('/:cartId',cartController.deleteCart)
+router.post('/', cartController.createCart)
+router.delete('/:cartId', cartController.deleteCart)
 
 // router.get('/',cartController.getCartAll)
 // router.post('/',cartController.createCart)
