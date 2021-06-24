@@ -99,7 +99,7 @@ router.post("/cart", async (req, res) => {
         const decoded = jwt.verify(token1,process.env.JWT_KEY);
         let userid=decoded.userId
         try{
-          const cart=await Cart.find({userId:userid})
+          const cart=await Cart.findOne({userId:userid})
           console.log(cart)
         if(cart){
           const itemIndex= cart.products.findIndex(p=>p._id==itemId)
