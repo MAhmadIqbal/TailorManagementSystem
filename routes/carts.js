@@ -43,18 +43,21 @@ router.get('/byitem_id', async (req, res) => {
 router.post("/cart", async (req, res) => {
   const { productId, quantity } = req.body;
 
-  var product = await Product.findOne({ _id: productId }).exec().then(results => {
-    return results
+  var product = await Product.find({ _id: productId }).exec().then(result => {
+    return result;
   })
+
   console.log(product)
-  const name = product.name
-  const price = product.price
+
+  const name = product[0].name
+  const price = product[0].price
 
   const token1 = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token1, process.env.JWT_KEY);
 
   console.log(decoded)
   let userid = decoded.userId
+
   try {
     let cart = await Cart.findOne({ userId: userid });
     if (cart) {
@@ -85,20 +88,21 @@ router.post("/cart", async (req, res) => {
     console.log(err);
     res.status(500).send("Something went wrong");
   }
-});
+})
+
 //route of deleting item from cart
 router.post('/remove-items', async (req, res) => {
   itemId = req.body.itemId
   //get userId from token
   const token1 = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token1, process.env.JWT_KEY);
-  req.userData = decoded;
-  let userId = req.userData.userId
-
+  let userid = decoded.userId
   try {
-    const cart = await Cart.findOne({ userId })
+    const cart = await Cart.find({ userId: userid })
+    console.log(cart)
     if (cart) {
       const itemIndex = cart.products.findIndex(p => p._id == itemId)
+      console.log(itemIndex)
       if (itemIndex > -1) {
         cart.products.splice(itemIndex, 1)
       }
@@ -109,6 +113,7 @@ router.post('/remove-items', async (req, res) => {
     console.log(err)
     res.status(500).send(err)
   }
+
 })
 //rest of routes of cart  
 router.post('/', cartController.createCart)
