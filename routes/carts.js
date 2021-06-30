@@ -14,6 +14,8 @@ let userIdFromToken = function (req) {
 }
 
 router.get('/', cartController.getCartAll)
+
+
 router.get('/byitem_id', async (req, res) => {
   const token1 = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token1, process.env.JWT_KEY);
@@ -22,6 +24,8 @@ router.get('/byitem_id', async (req, res) => {
   }
   req.userData = decoded;
   let userId = req.userData.userId
+
+  console.log("user id", userId)
 
   Cart.findOne({ userId }).exec()
 
@@ -61,24 +65,31 @@ router.post("/cart", async (req, res) => {
   try {
     let cart = await Cart.findOne({ userId: userid });
     if (cart) {
+      console.log("if 64")
       //cart exists for this user
       let itemIndex = await cart.products.findIndex(p => p.productId == productId);
 
       if (itemIndex > -1) {
+        console.log(" 69")
+
         //product exists in the cart, update the quantity
         let productItem = cart.products[itemIndex];
         productItem.quantity = quantity;
         cart.products[itemIndex] = productItem;
       } else {
+        console.log("if 76")
+
         //product does not exists in cart, add new product item
         cart.products.push({ productId, quantity, name, price });
       }
       cart = await cart.save();
       return res.status(201).send(cart);
     } else {
+      console.log("if 84")
+
       //no cart for user, create new cart
       const newCart = await Cart.create({
-        userid,
+        userId: userid,
         products: [{ productId, quantity, name, price }]
       });
 
@@ -91,19 +102,57 @@ router.post("/cart", async (req, res) => {
 })
 
 //route of deleting item from cart
+// router.post('/remove-items', async (req, res) => {
+//   itemId = req.body.itemId
+//   //get userId from token
+//   const token1 = req.headers.authorization.split(" ")[1];
+//   const decoded = jwt.verify(token1, process.env.JWT_KEY);
+//   let userid = decoded.userId
+//   console.log("userId", userid, token1)
+//   try {
+//     const cart = await Cart.find({ userId: userid })
+//     console.log("cart", cart)
+//     if (cart) {
+//       const itemIndex = cart.products.findIndex(p => p._id == itemId)
+//       console.log("itemIndex", itemIndex)
+//       if (itemIndex > -1) {
+//         cart.products.splice(itemIndex, 1)
+//       }
+//       await cart.save()
+//       return res.status(201).send(cart)
+//     }
+//   } catch (err) {
+//     console.log(err)
+//     res.status(500).send(err)
+//   }
+
+// })
+
 router.post('/remove-items', async (req, res) => {
   itemId = req.body.itemId
   //get userId from token
   const token1 = req.headers.authorization.split(" ")[1];
   const decoded = jwt.verify(token1, process.env.JWT_KEY);
   let userid = decoded.userId
+  // let userid = "604b3e7bb2e0dc18ac7d40b4"
+
+
   try {
-    const cart = await Cart.find({ userId: userid })
-    console.log(cart)
+    // const cart = await Cart.find({ userId: userid })
+    const cart = await Cart.findOne({ userId: userid })
+
+    console.log("cart", cart)
     if (cart) {
-      const itemIndex = cart.products.findIndex(p => p._id == itemId)
-      console.log(itemIndex)
+
+      console.log("cart products", cart.products)
+
+      const itemIndex = await cart.products.findIndex(p => p._id == itemId)
+
+      // findIndex -> if condition match return index no: else -1
+      console.log("itemIndex", itemIndex)
       if (itemIndex > -1) {
+
+        //  1 -> replace 0-> add
         cart.products.splice(itemIndex, 1)
       }
       await cart.save()

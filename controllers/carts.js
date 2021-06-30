@@ -55,63 +55,65 @@ exports.getCartAll = (req, res, next) => {
 //       });
 //     })
 // }
-exports.createCart = (req,res,next)=>{
-    Cart.findById(req.body.productId)
-    .then(productRes=>{
-        const cart = new Cart({
-            _id: mongoose.Types.ObjectId(),
-            product:productRes.name,
-            productPrice:productRes.price
-          }) 
-          console.log(productRes.price)
-          return cart.save()
-      
-        })
-    .then(result=>{
-        res.status(200).json({
-            message:"Cart has been made",
-            createdAt:{
-                id: result._id,
-                cart:result
-            }
-            })
-        })
-    .catch(err=>{
-        console.log(err)
-        res.status(500).json({
-        error:err
-            })
-        })
-}
-exports.deleteCart = (req,res,next)=>{
-    Cart.remove({_id:req.params._id})
-    .then(result=>{
-        res.status(200).json({
-            message:"cart removed",
-            result:result
-        })
-    }).catch(err=>{ 
-        console.log(err)
-        res.status(500).json({
-            message:"error has occured",
-            error:err
-            }) 
-        })
-}
+exports.createCart = (req, res, next) => {
+  Cart.findById(req.body.productId)
+    .then(productRes => {
+      const cart = new Cart({
+        _id: mongoose.Types.ObjectId(),
+        product: productRes.name,
+        productPrice: productRes.price
+      })
+      console.log(productRes.price)
+      return cart.save()
 
-exports.removeFromCart = (req,res,next)=>{
-    cart= (req.params.id)
-    Cart.find(cart,(err,result)=>{
-        if(err){
-            res.status(500).json(err)
+    })
+    .then(result => {
+      res.status(200).json({
+        message: "Cart has been made",
+        createdAt: {
+          id: result._id,
+          cart: result
         }
-    return result;
-    }).then(cartfinded=>{
-        Cart.find(req.body.productId)
+      })
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({
+        error: err
+      })
     })
 }
-exports.topProducts = (req,res,next)=>{
-    Product.find({sum:{$gt:0}}).sort({sum:'desc'}).limit(10)
+// exports.deleteCart = (req, res, next) => {
+//   Cart.remove({ _id: req.params._id })
+//     .then(result => {
+//       console.log("err", result)
+//       res.status(200).json({
+
+//         message: "cart removed",
+//         result: result
+//       })
+//     }).catch(err => {
+//       console.log(err)
+//       res.status(500).json({
+//         message: "error has occured",
+//         error: err
+//       })
+//     })
+// }
+
+exports.removeFromCart = (req, res, next) => {
+  cart = (req.params.id)
+  Cart.find(cart, (err, result) => {
+    if (err) {
+      res.status(500).json(err)
+    }
+    return result;
+  }).then(cartfinded => {
+    Cart.find(req.body.productId)
+  })
+}
+exports.topProducts = (req, res, next) => {
+  Product.find({ sum: { $gt: 0 } }).sort({ sum: 'desc' }).limit(10)
     .exec()
     .then((docs) => {
       if (!cart) {
@@ -134,10 +136,13 @@ exports.topProducts = (req,res,next)=>{
 };
 
 exports.deleteCart = (req, res, next) => {
-  Cart.remove({ _id: req.params._id })
+  Cart.remove({ _id: req.params._id }).exec()
     .then((result) => {
+      console.log("err", result)
       res.status(200).json({
-        message: "order removed from cart",
+
+        message: "cart removed",
+        result: result
       });
     })
     .catch((err) => {
@@ -148,4 +153,3 @@ exports.deleteCart = (req, res, next) => {
       });
     });
 };
-exports.removeFromCart = (req, res, next) => {};
