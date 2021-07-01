@@ -1,40 +1,42 @@
 const mongoose = require("mongoose");
 const Order = require("../models/order");
 const Product = require("../models/product");
-const jwt=require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 const Cart = require('../models/cart')
+const orders = require("../models/orders");
+
 
 exports.orders_getall = async (req, res, next) => {
   await Order.find()
     .select("name orderNo _id delivery")
     .exec()
     .then(docs => {
-      if(docs.length===0){
+      if (docs.length === 0) {
         res.status(404).send('Nothing has found in orders')
       }
       const response = {
         count: docs.length,
         order: docs.map(doc => {
-        return {
-          id: doc._id,
-          orderNo: doc.orderNo,
-          name: doc.name,
-          delivery: doc.delivery,
+          return {
+            id: doc._id,
+            orderNo: doc.orderNo,
+            name: doc.name,
+            delivery: doc.delivery,
 
-          request: {
-            type: "GET",
-            url: "http://localhost:3000/orders/" + doc._id,
-          },
-        };
-      })
+            request: {
+              type: "GET",
+              url: "http://localhost:3000/orders/" + doc._id,
+            },
+          };
+        })
       }
-      
+
       res.status(200).json(response);
     })
     .catch(err => {
       console.log(err)
       res.status(500).json({
-        message:'error occured',
+        message: 'error occured',
         'error': err
       });
     });
@@ -67,8 +69,8 @@ exports.orders_getall = async (req, res, next) => {
 //     });
 // }
 exports.orders_getId = (req, res, next) => {
-  const id=req.params.orderId
-  Order.findById({_id:id})
+  const id = req.params.orderId
+  Order.findById({ _id: id })
     .exec()
     .then((order) => {
       if (!order) {
@@ -91,7 +93,7 @@ exports.orders_getId = (req, res, next) => {
     });
 };
 exports.order_delete = (req, res, next) => {
-  const id=req.params.orderId
+  const id = req.params.orderId
   Order.remove({ _id: id })
     .exec()
     .then((result) => {
@@ -125,55 +127,76 @@ exports.order_delete = (req, res, next) => {
 exports.orders_post = async (req, res, next) => {
 
   const token1 = req.headers.authorization.split(" ")[1];
-  const decoded  =jwt.verify(token1, process.env.JWT_KEY);
-  const decodeduserId=decoded.userId
-  Cart.find({userId:decodeduserId}).exec()
-  .then(result=>{
-    if(result==undefined|| result.length===0){
-      res.status(404).send('nothing in cart has found')
-    }
-    var array=[];
-    array=result[0].products;
-    var arraylength=array.length
-    console.log("line126",array)
-    cartId=result[0]._id
-    for(var i=0;i<arraylength;i++){
-      var total = 0
-      total=array[i].price+total
-      console.log(total)
-    }
-    const order = new Order({
-      _id: mongoose.Types.ObjectId(),
-      user:decodeduserId,
-      cart:cartId,
-      orderNo: req.body.orderNo,
-      name: req.body.name,
-      delivery: req.body.delivery,
-      totalPrice:total,
-      paymentMethod:req.body.paymentMethod,
-      shippingMethod:req.body.shippingMethod,
-      paymentStatus:req.body.paymentStatus
-    })
-   try{
-    order.save((err,result)=>{
-      if(err){
-        res.status(505).send(err)
+  const decoded = jwt.verify(token1, process.env.JWT_KEY);
+  const decodeduserId = decoded.userId
+  Cart.find({ userId: decodeduserId }).exec()
+    .then(result => {
+      if (result == undefined || result.length === 0) {
+        res.status(404).send('nothing in cart has found')
       }
-      if(result){
-        res.status(200).json({
-          message:"Order has been placed",
-          'Order':result
+      var array = [];
+      array = result[0].products;
+      var arraylength = array.length
+      console.log("line126", array)
+      cartId = result[0]._id
+      for (var i = 0; i < arraylength; i++) {
+        var total = 0
+        total = array[i].price + total
+        console.log(total)
+      }
+      const order = new Order({
+        _id: mongoose.Types.ObjectId(),
+        user: decodeduserId,
+        cart: cartId,
+        orderNo: req.body.orderNo,
+        name: req.body.name,
+        delivery: req.body.delivery,
+        totalPrice: total,
+        paymentMethod: req.body.paymentMethod,
+        shippingMethod: req.body.shippingMethod,
+        paymentStatus: req.body.paymentStatus
+      })
+      try {
+        order.save((err, result) => {
+          if (err) {
+            res.status(505).send(err)
+          }
+          if (result) {
+            res.status(200).json({
+              message: "Order has been placed",
+              'Order': result
+            })
+          }
         })
-      }  
+
+      } catch (err) {
+        {
+          res.status(500).send(err)
+        }
+      }
+
     })
-    
-   }catch(err){
-     {
-       res.status(500).send(err)
-     }
-   }
-    
-  })
+};
+
+exports.tailororder_post = async (req, res, next) => {
+
+  console.log("order call")
+  const torder = new orders({
+    _id: new mongoose.Types.ObjectId(),
+    orderNo: req.body.orderNo,
+    name: req.body.name,
+    delivery: req.body.delivery,
+  });
+  console.log("order ", torder)
+
+  try {
+
+    const or1 = await torder.save();
+
+    return res.json({ status: "success", orderdata: or1 });
+  } catch (e) {
+    next(e);
+  }
 };
 
 // exports.orderListCurrentUser = (req, res, next) => {
@@ -242,6 +265,7 @@ exports.orders_postId = (req, res, next) => {
 //             })
 //         }
 
+
 exports.order_update = (req, res, next) => {
   const id = req.params.orderId;
   const updateOps = {};
@@ -250,12 +274,12 @@ exports.order_update = (req, res, next) => {
   // }
   updateOps[req.body.propName] = req.body.value;
   console.log("updateOps", updateOps);
-  Order.updateMany({ _id: id }, { $set: req.body})
+  Order.updateMany({ _id: id }, { $set: req.body })
     .exec()
     .then((result) => {
       res.status(200).json({
         message: "Order Updated",
-        "Updated Order":result,
+        "Updated Order": result,
         request: {
           type: "GET",
           url: "http://localhost:3000/orders/" + result._id,
@@ -268,6 +292,7 @@ exports.order_update = (req, res, next) => {
       });
     });
 };
+
 exports.orderListCurrentUser = (req, res, next) => {
   Order.find({ user: req.params.userOrderId })
     .exec()
@@ -286,6 +311,7 @@ exports.orderListCurrentUser = (req, res, next) => {
       });
     });
 };
+
 exports.userOrders = (req, res, next) => {
   id = req.params.userId;
   Order.find({ user: id }).exec((err, result) => {

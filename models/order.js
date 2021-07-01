@@ -7,14 +7,14 @@ const orderSchema = mongoose.Schema({
   cart: { type: mongoose.Schema.Types.ObjectId, ref: "Cart", required: true },
   name: { type: String },
   orderNo: { type: Number },
-  totalPrice:{type:Number},
+  totalPrice: { type: Number },
   delivery: { type: Date },
-  paymentMethod:String,
-  shippingMethod:String,
-  paymentStatus:{type:String,enum:['pending','processing','delivered'],default:'pending'},
+  paymentMethod: String,
+  shippingMethod: String,
+  paymentStatus: { type: String, enum: ['pending', 'processing', 'delivered'], default: 'pending' },
   createdAt: { type: Number, default: Date.now },
-  
-},{timestamps:true});
+
+}, { timestamps: true });
 
 
 module.exports = mongoose.model("order", orderSchema);

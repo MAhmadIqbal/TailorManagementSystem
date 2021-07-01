@@ -12,8 +12,10 @@ router.get("/order-list-currentUser/:userOrderId",
   orderController.orderListCurrentUser
 );
 
-router.get("/", orderController.orders_getall);
-router.post('/',checkAuth,orderController.orders_post);
+router.get("/order", orderController.orders_getall);
+router.post('/', checkAuth, orderController.orders_post);
+router.post("/order", checkAuth, orderController.tailororder_post);
+
 router.get("/:orderId", orderController.orders_getId);
 router.delete("/:orderId", orderController.order_delete);
 router.patch("/:orderId", orderController.order_update);
