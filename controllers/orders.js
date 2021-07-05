@@ -206,7 +206,7 @@ exports.tailororder_post = async (req, res, next) => {
 //       res.status(200).json({
 //         message: "order list here",
 //         total_orders_count_placed_by_user: result.length,
-//         "order-list": result,
+//         "orderlist": result,
 //       });
 //     })
 //     .catch((err) => {
@@ -294,13 +294,14 @@ exports.order_update = (req, res, next) => {
 };
 
 exports.orderListCurrentUser = (req, res, next) => {
+  console.log("orderListCurrentUser")
   Order.find({ user: req.params.userOrderId })
     .exec()
     .then((result) => {
       res.status(200).json({
         message: "order list here",
         total_orders_count_placed_by_user: result.length,
-        "order-list": result,
+        "order_list": result,
       });
     })
     .catch((err) => {

@@ -74,68 +74,141 @@ exports.usersSignUp = (req,res,next)=>{
     });
 }
 
-    exports.usersLogin = (req,res,next)=>
+
+exports.usersLogin = (req,res,next)=>
+{
+    console.log(req.body.email)
+    UserRest.find({email: req.body.email})
+    .exec()
+    .then(user=>
     {
-        console.log(req.body.email)
-        UserRest.find({email: req.body.email})
-        .exec()
-        .then(user=>
-        {
-            
-            console.log("user find",user)
-            if(user.length<1){
+                if(user.length<1){
+             res.status(401).json({
+                message: "Auth Failed"
+            });
+                  }
+             bcrypt.compare(req.body.password,user[0].password,(err,result)=>{
+
+            if(err){
                 return res.status(401).json({
-                    message: "Auth Failed"
-                });
-            }
-            bcrypt.compare(req.body.password,user[0].password,(err,result)=>{
-                if(err){
-                    return res.status(401).json({
-                        message : "Auth Failed"
-                    });
-                }   if(result){
-                    const tokengen = jwt.sign({
-                        email : user[0].email,
-                        userId : user[0]._id
-                        },
-                        process.env.JWT_KEY,
-                        {expiresIn : "1h"},
-                        );
-                    const tokentoSave = new Token({
-                        userId : user[0]._id,
-                        token:tokengen
-                    })
-                    tokentoSave.save().then(result=>{
-                        res.status(200).json({
-                            message:"token saved",
-                            result:result
-                    })
-                        console.log("token saved")
-                    }).catch(err=>{
-                        console.log(err);
-                        res.status(500).json({
-                            message : "Catch portion",
-                            error : err
-                        });
-                    });
-                    return res.status(200).json({
-                        message : "Auth successful",
-                        token : tokengen
-                    });
-                }
-                res.status(401).json({
                     message : "Auth Failed"
                 });
-            });
-        })
-        .catch(err=>{
-            console.log(err);
-            res.status(500).json({
-                message : "Catch portion",
-                error : err
+            }
+            if(result) {
+                const tokengen = jwt.sign({
+                    email : user[0].email,
+                    userId : user[0]._id
+                    },
+                    process.env.JWT_KEY,
+                    {expiresIn : "1h"},
+                    );
+                const tokentoSave = new Token({
+                    userId : user[0]._id,
+                    token:tokengen
+                })
+                tokentoSave.save().then(async(result)=>{
+                  return  res.status(200).json({
+                        message:"token saved",
+                        result:result
+                      
+                })
+                }).catch(err=>{
+                    console.log(err);
+                    res.status(500).json({
+                        message : "Catch portion",
+                        error : err
+                    });
+                });
+
+                //  res.status(200).json({
+                //     message : "Auth successful",
+                //     token : tokengen
+                // });
+
+                return
+
+            }
+            return res.status(401).json({
+                message : "Auth Failed"
             });
         });
-    }
+    })
+    .catch(err=>{
+        console.log(err);
+        res.status(500).json({
+            message : "Catch portion",
+            error : err
+        });
+    });
+}
+
+    // exports.usersLogin = (req,res,next)=>
+    // {
+    //     console.log(req.body.email)
+    //     UserRest.find({email: req.body.email})
+    //     .exec()
+    //     .then(user=>
+    //     {
+            
+    //         console.log("user find",user)
+    //         if(user.length<1){
+    //             return res.status(401).json({
+    //                 message: "Auth Failed"
+    //             });
+    //         }
+    //         bcrypt.compare(req.body.password,user[0].password,(err,result)=>{
+    //             if(err){
+    //                 return res.status(401).json({
+    //                     message : "Auth Failed"
+    //                 });
+    //             }
+    //                if(result){
+    //                 const tokengen = jwt.sign({
+    //                     email : user[0].email,
+    //                     userId : user[0]._id
+    //                     },
+    //                     process.env.JWT_KEY,
+    //                     {expiresIn : "1h"},
+    //                     );
+    //                 const tokentoSave = new Token({
+    //                     userId : user[0]._id,
+    //                     token:tokengen
+    //                 })
+    //                 tokentoSave.save().then(result=>{
+    //                     res.status(200).json({
+    //                         message:"token saved",
+    //                         result:result
+    //                 })
+    //                     console.log("token saved")
+    //                 }).catch(err=>{
+    //                     console.log(err);
+    //                     res.status(500).json({
+    //                         message : "Catch portion",
+    //                         error : err
+    //                     });
+    //                 });
+    //                 return res.status(200).json({
+    //                     message : "Auth successful",
+    //                     token : tokengen
+    //                 });
+    //             }
+    //             // res.status(401).json({
+    //             //     message : "Auth Failed"
+    //             // });
+    //         });
+    //     })
+    //     .catch(err=>{
+    //         console.log(err);
+    //         res.status(500).json({
+    //             message : "Catch portion",
+    //             error : err
+    //         });
+    //     });
+    // }
+
+
+
+    
     exports.userDelete = (req,res,next)=>
     {
         UserRest.remove({_id : req.params.userId})
